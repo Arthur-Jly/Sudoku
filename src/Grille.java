@@ -1,15 +1,12 @@
+import java.util.Scanner;
 
-import java.awt.*;
-import javax.swing.*;
-
-// Classe principale pour la grille
 public class Grille {
 
     private int[][] grille;
     private int taille;
 
     /**
-     *
+     * Constructeur de la classe Grille
      * @param taille Custom value of grille
      */
     public Grille(int taille) {
@@ -18,38 +15,58 @@ public class Grille {
     }
 
     /**
-     *
+     * Affiche la grille dans le terminal
      */
-    public void afficherGrilleGraphique() {
-        JFrame frame = new JFrame("Grille");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1920, 1080);
-
-        JPanel panel = new JPanel(new GridLayout(taille, taille));
-
+    public void afficherGrilleTerminal() {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
-                JTextField cell = new JTextField();
-                cell.setHorizontalAlignment(JTextField.CENTER);
-                cell.setFont(new Font("Arial", Font.BOLD, 20));
-                cell.setText(grille[i][j] == 0 ? "" : String.valueOf(grille[i][j]));
-                cell.setEditable(false);
-                panel.add(cell);
+                System.out.print(grille[i][j] == 0 ? "." : grille[i][j]);
+                System.out.print(" ");
             }
+            System.out.println();
         }
-
-        frame.add(panel);
-        frame.setVisible(true);
     }
 
     /**
-     *
+     * Initialiser la grille avec les valeurs saisies par l'utilisateur
      */
     public void initialiserGrille() {
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                grille[i][j] = 0; // Initialise toutes les cases à 0
+        Scanner scanner = new Scanner(System.in);
+        boolean continuer = true;
+
+        while (continuer) {
+            System.out.print("Entrez l'abscisse (0 a " + (taille - 1) + ") : ");
+            int abscisse = scanner.nextInt();
+
+            System.out.print("Entrez l'ordonnee (0 a " + (taille - 1) + ") : ");
+            int ordonnee = scanner.nextInt();
+
+            if (abscisse < 0 || abscisse >= taille || ordonnee < 0 || ordonnee >= taille) {
+                System.out.println("Coordonnees invalides. Essayez a nouveau.");
+                continue;
+            }
+
+            System.out.print("Entrez la valeur (1 a 9) pour la case (" + abscisse + ", " + ordonnee + ") : ");
+            int valeur = scanner.nextInt();
+
+            if (valeur < 1 || valeur > 9) {
+                System.out.println("Valeur invalide. La valeur doit etre entre 1 et 9.");
+                continue;
+            }
+
+            // Met la valeur dans la grille
+            grille[abscisse][ordonnee] = valeur;
+
+            // Demande a l'utilisateur s'il veut continuer
+            System.out.print("Voulez-vous continuer ? (oui/non) : ");
+            String reponse = scanner.next();
+
+            if (reponse.equalsIgnoreCase("non")) {
+                continuer = false;
             }
         }
+
+        // Afficher la grille apres les entrees
+        afficherGrilleTerminal();
     }
 }

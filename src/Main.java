@@ -17,11 +17,9 @@ public class Main {
             // Initialise et affiche la grille
             Grille grille = new Grille(taille);
             grille.initialiserGrille();
-            grille.afficherGrilleGraphique();
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Veuillez entrer un nombre valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
-

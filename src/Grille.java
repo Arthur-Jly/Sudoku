@@ -1,72 +1,196 @@
-import java.util.Scanner;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class Grille {
+/**
+ * Classe Grille pour représenter une grille Sudoku avec une interface graphique.
+ * Permet de définir les valeurs initiales de la grille et de configurer les blocs.
+ */
+public class Grille extends JFrame {
 
-    private int[][] grille;
-    private int taille;
+    private int[][] grilleValeurs; // Grille contenant les valeurs initiales du Sudoku
+    private int[][] grilleBlocs;   // Grille contenant les blocs définis par l'utilisateur
+    private int taille;           // Taille de la grille 
+    private JTextField[][] champsTexte; // Champs de texte pour la saisie des valeurs
+    private boolean estPremierePhase = true; // Indique si l'utilisateur est dans la phase initiale
 
     /**
-     * Constructeur de la classe Grille
-     * @param taille Custom value of grille
+     * Constructeur pour initialiser la grille avec une taille donnée.
+     *
+     * @param taille Taille de la grille Sudoku.
      */
     public Grille(int taille) {
         this.taille = taille;
-        this.grille = new int[taille][taille];
+        this.grilleValeurs = new int[taille][taille];
+        this.grilleBlocs = new int[taille][taille];
+        this.champsTexte = new JTextField[taille][taille];
+        configurerInterface(); // Configure l'interface graphique
     }
 
     /**
-     * Affiche la grille dans le terminal
+     * Configure l'interface graphique de la fenêtre.
      */
-    public void afficherGrilleTerminal() {
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                System.out.print(grille[i][j] == 0 ? "." : grille[i][j]);
-                System.out.print(" ");
+    private void configurerInterface() {
+        setTitle("Grille Sudoku - Phase initiale");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panneauGrille = new JPanel(new GridLayout(taille, taille));
+
+        // Créer les champs de texte pour la grille
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                JTextField champ = new JTextField(2);
+                champ.setHorizontalAlignment(JTextField.CENTER);
+                champ.setFont(new Font("Arial", Font.BOLD, 20));
+                champ.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+                final int l = ligne;
+                final int c = colonne;
+
+                // Ajouter un écouteur pour valider l'entrée utilisateur
+                champ.addFocusListener(new FocusAdapter() {
+                    @Override
+                    public void focusLost(FocusEvent e) {
+                        validerEntree(champ, l, c);
+                    }
+                });
+
+                champsTexte[ligne][colonne] = champ;
+                panneauGrille.add(champ);
             }
-            System.out.println();
+        }
+
+        JPanel panneauBoutons = new JPanel();
+        JButton boutonValider = new JButton("Valider et passer à la phase suivante");
+        JButton boutonAfficher = new JButton("Afficher les grilles");
+
+        // Actions pour les boutons
+        boutonValider.addActionListener(e -> passerPhaseSuivante());
+        boutonAfficher.addActionListener(e -> afficherGrilles());
+
+        panneauBoutons.add(boutonValider);
+        panneauBoutons.add(boutonAfficher);
+
+        setLayout(new BorderLayout());
+        add(panneauGrille, BorderLayout.CENTER);
+        add(panneauBoutons, BorderLayout.SOUTH);
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    /**
+     * Valide l'entrée utilisateur dans un champ de texte.
+     *
+     * @param champ  Le champ de texte contenant l'entrée utilisateur.
+     * @param ligne  La ligne correspondante dans la grille.
+     * @param colonne La colonne correspondante dans la grille.
+     */
+    private void validerEntree(JTextField champ, int ligne, int colonne) {
+        String entree = champ.getText().trim();
+        if (!entree.isEmpty()) {
+            try {
+                int valeur = Integer.parseInt(entree);
+                if (estPremierePhase) {
+                    if (valeur >= 1 && valeur <= taille) {
+                        grilleValeurs[ligne][colonne] = valeur;
+                    } else {
+                        champ.setText("");
+                        JOptionPane.showMessageDialog(this, 
+                            "Veuillez entrer un nombre entre 1 et " + taille);
+                    }
+                } else {
+                    if (valeur >= 1 && valeur <= taille) {
+                        grilleBlocs[ligne][colonne] = valeur;
+                    } else {
+                        champ.setText("");
+                        JOptionPane.showMessageDialog(this, 
+                            "Veuillez entrer un nombre entre 1 et " + taille);
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                champ.setText("");
+                JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre valide");
+            }
         }
     }
 
     /**
-     * Initialiser la grille avec les valeurs saisies par l'utilisateur
+     * Affiche les grilles (valeurs et blocs) dans une boîte de dialogue.
+     */
+    private void afficherGrilles() {
+        StringBuilder grilleValeursStr = new StringBuilder("Grille initiale:\n");
+        StringBuilder grilleBlocsStr = new StringBuilder("\nGrille des blocs:\n");
+
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                grilleValeursStr.append(grilleValeurs[ligne][colonne] == 0 ? "." : grilleValeurs[ligne][colonne]).append(" ");
+            }
+            grilleValeursStr.append("\n");
+        }
+
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                grilleBlocsStr.append(grilleBlocs[ligne][colonne] == 0 ? "." : grilleBlocs[ligne][colonne]).append(" ");
+            }
+            grilleBlocsStr.append("\n");
+        }
+
+        JDialog dialogue = new JDialog(this, "Affichage des grilles", true);
+        dialogue.setLayout(new BorderLayout());
+
+        JTextArea zoneTexte = new JTextArea(grilleValeursStr.toString() + grilleBlocsStr.toString());
+        zoneTexte.setEditable(false);
+        zoneTexte.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+        JScrollPane zoneDefilement = new JScrollPane(zoneTexte);
+        zoneDefilement.setPreferredSize(new Dimension(300, 400));
+
+        JButton boutonFermer = new JButton("Valider et terminer");
+        boutonFermer.addActionListener(e -> {
+            dialogue.dispose();
+            if (!estPremierePhase) {
+                dispose();
+                System.exit(0);
+            }
+        });
+
+        JPanel panneauBouton = new JPanel();
+        panneauBouton.add(boutonFermer);
+
+        dialogue.add(zoneDefilement, BorderLayout.CENTER);
+        dialogue.add(panneauBouton, BorderLayout.SOUTH);
+
+        dialogue.pack();
+        dialogue.setLocationRelativeTo(this);
+        dialogue.setVisible(true);
+    }
+
+    /**
+     * Passe à la phase suivante pour définir les blocs de la grille.
+     */
+    private void passerPhaseSuivante() {
+        if (estPremierePhase) {
+            estPremierePhase = false;
+            setTitle("Grille Sudoku - Définition des blocs");
+
+            for (int ligne = 0; ligne < taille; ligne++) {
+                for (int colonne = 0; colonne < taille; colonne++) {
+                    champsTexte[ligne][colonne].setText("");
+                }
+            }
+
+            JOptionPane.showMessageDialog(this,
+                "Passez à la définition des blocs.\nUtilisez les nombres de 1 à " + taille);
+        } else {
+            afficherGrilles();
+        }
+    }
+
+    /**
+     * Initialise et rend la fenêtre visible.
      */
     public void initialiserGrille() {
-        Scanner scanner = new Scanner(System.in);
-        boolean continuer = true;
-
-        while (continuer) {
-            System.out.print("Entrez l'abscisse (0 a " + (taille - 1) + ") : ");
-            int abscisse = scanner.nextInt();
-
-            System.out.print("Entrez l'ordonnee (0 a " + (taille - 1) + ") : ");
-            int ordonnee = scanner.nextInt();
-
-            if (abscisse < 0 || abscisse >= taille || ordonnee < 0 || ordonnee >= taille) {
-                System.out.println("Coordonnees invalides. Essayez a nouveau.");
-                continue;
-            }
-
-            System.out.print("Entrez la valeur (1 a 9) pour la case (" + abscisse + ", " + ordonnee + ") : ");
-            int valeur = scanner.nextInt();
-
-            if (valeur < 1 || valeur > 9) {
-                System.out.println("Valeur invalide. La valeur doit etre entre 1 et 9.");
-                continue;
-            }
-
-            // Met la valeur dans la grille
-            grille[abscisse][ordonnee] = valeur;
-
-            // Demande a l'utilisateur s'il veut continuer
-            System.out.print("Voulez-vous continuer ? (oui/non) : ");
-            String reponse = scanner.next();
-
-            if (reponse.equalsIgnoreCase("non")) {
-                continuer = false;
-            }
-        }
-
-        // Afficher la grille apres les entrees
-        afficherGrilleTerminal();
+        setVisible(true);
     }
 }

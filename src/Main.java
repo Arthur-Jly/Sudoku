@@ -1,8 +1,6 @@
-
 import javax.swing.*;
 
 public class Main {
-
     public static void main(String[] args) {
         // Demande la taille de la grille à l'utilisateur
         String tailleStr = JOptionPane.showInputDialog(null, "Entrez la taille de la grille (ex : 4, 9, etc.)","Taille de la grille", JOptionPane.QUESTION_MESSAGE);

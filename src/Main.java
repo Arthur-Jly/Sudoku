@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.util.Arrays;
+import javax.swing.*;
 
 public class Main {
     // Liste des tailles valides (carrés parfaits jusqu'à 49)

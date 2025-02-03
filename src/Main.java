@@ -1,8 +1,6 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
+import javax.swing.*;
 
 public class Main {
     private static final int[] TAILLES_VALIDES = {4, 9, 16, 25, 36, 49};
@@ -55,31 +53,32 @@ public class Main {
 
     private static void afficherMenuResolution(int[][] grilleValeurs, int taille) {
         JFrame frame = new JFrame("Choisir la méthode de résolution");
-        frame.setSize(300, 150);
+        frame.setSize(400, 150);
         frame.setLayout(new FlowLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JButton btnBacktracking = new JButton("Backtracking");
         JButton btnDeduction = new JButton("Déduction");
+        JButton btnCombine = new JButton("Méthode Combinée");
 
-        btnBacktracking.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Fermer la fenêtre
-                lancerBacktracking(grilleValeurs, taille);
-            }
+        btnBacktracking.addActionListener(e -> {
+            frame.dispose();
+            lancerBacktracking(grilleValeurs, taille);
         });
 
-        btnDeduction.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                lancerDeduction(grilleValeurs, taille);
-            }
+        btnDeduction.addActionListener(e -> {
+            frame.dispose();
+            lancerDeduction(grilleValeurs, taille);
+        });
+
+        btnCombine.addActionListener(e -> {
+            frame.dispose();
+            lancerMethodeCombinee(grilleValeurs, taille);
         });
 
         frame.add(btnBacktracking);
         frame.add(btnDeduction);
+        frame.add(btnCombine);
         frame.setVisible(true);
     }
 
@@ -100,6 +99,15 @@ public class Main {
         } else {
             System.out.println("\nGrille résolue par Déduction :");
             afficherGrille(solveur.getGrilleResolue(), taille);
+        }
+    }
+
+    private static void lancerMethodeCombinee(int[][] grilleValeurs, int taille) {
+        ResolveurCombine solveur = new ResolveurCombine(grilleValeurs);
+        if (!solveur.resoudreSudoku()) {
+            System.out.println("\nLa grille n'est pas résolvable !");
+        } else {
+            solveur.afficherSolution();
         }
     }
 

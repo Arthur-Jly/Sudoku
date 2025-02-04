@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.Arrays;
 import javax.swing.*;
 
@@ -63,11 +62,11 @@ public class Main {
                     options[0]
             );
 
-            Grille grille = new Grille(taille);
+            Grille grille = new Multidoku(taille);
 
             // Mode graphique
             if (choixMode == 0) {
-                SudokuModeGraphique modeGraphique = new SudokuModeGraphique(grille);
+                SudokuModeGraphique modeGraphique = new MultidokuModeGraphique(grille);
                 modeGraphique.initialiserGrille();
             }
             // Mode texte

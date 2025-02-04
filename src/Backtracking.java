@@ -1,8 +1,8 @@
 public class Backtracking {
-    private final int taille;
-    private final int tailleBloc;
-    private int[][] grille;
-    private final int[][] grilleOriginale;
+    public final int taille;
+    public final int tailleBloc;
+    public int[][] grille;
+    public final int[][] grilleOriginale;
 
     public Backtracking(int[][] grilleInitiale) {
         this.taille = grilleInitiale.length;
@@ -22,7 +22,7 @@ public class Backtracking {
     /**
      * Vérifie si une valeur peut être placée à une position donnée
      */
-    private boolean estValide(int ligne, int colonne, int valeur) {
+    public boolean estValide(int ligne, int colonne, int valeur) {
     // Vérification de la ligne
     for (int j = 0; j < taille; j++) {
         if (grille[ligne][j] == valeur) {
@@ -71,7 +71,7 @@ public class Backtracking {
     /**
      * Vérifie si la grille initiale est valide
      */
-   private boolean verifierGrilleInitiale() {
+   public boolean verifierGrilleInitiale() {
     for (int i = 0; i < taille; i++) {
         for (int j = 0; j < taille; j++) {
             int valeur = grilleOriginale[i][j];

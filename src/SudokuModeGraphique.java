@@ -166,14 +166,14 @@ public class SudokuModeGraphique extends JFrame {
         JPanel panneauGrille = new JPanel(new GridLayout(taille, taille));
 
         Color[] couleursBlocs = {
-            new Color(173, 216, 230),
-            new Color(255, 228, 225),
-            new Color(255, 255, 224),
-            new Color(144, 238, 144),
-            new Color(255, 182, 193),
-            new Color(240, 248, 255),
-            new Color(255, 250, 205),
-            new Color(221, 160, 221)
+            new Color(173, 216, 230), // Bleu clair
+            new Color(255, 228, 225), // Rose clair
+            new Color(255, 255, 224), // Jaune pâle
+            new Color(144, 238, 144), // Vert pâle
+            new Color(255, 182, 193), // Rose pâle
+            new Color(240, 248, 255), // Bleu pâle
+            new Color(255, 250, 205), // Jaune très pâle
+            new Color(221, 160, 221)  // Lavande clair
         };
 
         for (int ligne = 0; ligne < taille; ligne++) {

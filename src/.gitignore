@@ -1,0 +1,23 @@
+# Ignorer les fichiers compilés Java
+*.class
+
+# Ignorer les fichiers générés par les IDE
+/.idea/
+/.vscode/
+
+# Ignorer les fichiers de logs et temporaires
+*.log
+*.tmp
+
+# Ignorer les fichiers de build
+/bin/
+/build/
+/target/
+
+# Ignorer les fichiers JAR, WAR et EAR
+*.jar
+*.war
+*.ear
+
+# Ignorer les fichiers spécifiques à MacOS
+.DS_Store

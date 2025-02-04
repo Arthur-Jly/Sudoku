@@ -1,12 +1,12 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class SudokuModeGraphique extends JFrame {
-    private Grille grille;
-    private JTextField[][] champsTexte;
-    private final int taille;
-    private final int tailleBloc;
+    public Grille grille;
+    public JTextField[][] champsTexte;
+    public final int taille;
+    public final int tailleBloc;
 
     public SudokuModeGraphique(Grille grille) {
         this.grille = grille;
@@ -143,7 +143,7 @@ public class SudokuModeGraphique extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void validerEntree(JTextField champ, int ligne, int colonne) {
+    public void validerEntree(JTextField champ, int ligne, int colonne) {
         String entree = champ.getText().trim();
         if (!entree.isEmpty()) {
             try {
@@ -159,7 +159,7 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
-    private void afficherGrilleGraphique(int[][] grilleResolue) {
+    public void afficherGrilleGraphique(int[][] grilleResolue) {
         // Fenêtre pour afficher la grille résolue
         JFrame fenetreSolution = new JFrame("Grille Sudoku Résolue");
         fenetreSolution.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

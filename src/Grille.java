@@ -1,8 +1,8 @@
 public class Grille {
-    private int[][] grilleValeurs;
-    private final int taille;
-    private final int tailleBloc;
-    private boolean validee = false;
+    public int[][] grilleValeurs;
+    public final int taille;
+    public final int tailleBloc;
+    public boolean validee = false;
 
     public Grille(int taille) {
         this.taille = taille;

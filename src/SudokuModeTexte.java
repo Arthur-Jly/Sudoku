@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class SudokuModeTexte {
-    private Grille grille;
+    public Grille grille;
 
     public SudokuModeTexte(Grille grille) {
         this.grille = grille;

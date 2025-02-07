@@ -71,7 +71,7 @@ public class Main {
             }
             // Mode texte
             else if (choixMode == 1) {
-                SudokuModeTexte modeTexte = new SudokuModeTexte(grille);
+                SudokuModeTexte modeTexte = new MultidokuModeTexte(grille);
                 modeTexte.demarrerJeu();
             }
 

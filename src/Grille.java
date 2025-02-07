@@ -29,4 +29,8 @@ public class Grille {
     public void validerGrille() {
         validee = true;
     }
+
+    public int getTaille() {
+        return taille;
+    }
 }

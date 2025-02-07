@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
 import javax.swing.*;
 
 public class Main {
@@ -75,6 +77,31 @@ public class Main {
                 modeTexte.demarrerJeu();
             }
 
+            // Demander à l'utilisateur de sélectionner les règles de déduction
+            DeductionRuleManager ruleManager = new DeductionRuleManager();
+            Set<DeductionRuleType> reglesDisponibles = EnumSet.allOf(DeductionRuleType.class);
+            for (DeductionRuleType regle : reglesDisponibles) {
+                int choix = JOptionPane.showConfirmDialog(
+                        null,
+                        "Voulez-vous activer la règle : " + regle,
+                        "Sélection des règles de déduction",
+                        JOptionPane.YES_NO_OPTION
+                );
+                if (choix == JOptionPane.YES_OPTION) {
+                    ruleManager.activerRegle(regle);
+                } else {
+                    ruleManager.desactiverRegle(regle);
+                }
+            }
+
+            // Utiliser les règles sélectionnées pour la déduction
+            Deduction deduction = new Deduction(grille.getGrilleValeurs(), ruleManager);
+            if (deduction.resoudreSudoku()) {
+                deduction.afficherGrille();
+            } else {
+                System.out.println("Aucune solution trouvée avec les règles sélectionnées.");
+            }
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(
                     null,
@@ -83,6 +110,14 @@ public class Main {
                     JOptionPane.ERROR_MESSAGE
             );
             main(args); // Relance la demande
+        } finally {
+            // N'oubliez pas d'appeler la méthode closeLogger à la fin de votre programme pour fermer correctement le PrintWriter.
+            Backtracking backtracking = new Backtracking(new int[0][0]); // Utilisez une grille vide pour accéder à closeLogger
+            backtracking.closeLogger();
+
+            // Fermer le logger de Deduction
+            Deduction deduction = new Deduction(new int[0][0]); // Utilisez une grille vide pour accéder à closeLogger
+            deduction.closeLogger();
         }
     }
 

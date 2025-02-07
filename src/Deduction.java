@@ -2,11 +2,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Deduction {
-    private final int taille;
-    private final int tailleBloc;
-    private int[][] grille;
-    private final int[][] grilleOriginale;
-    private Set<Integer>[][] possibilites;
+    public final int taille;
+    public final int tailleBloc;
+    public int[][] grille;
+    public final int[][] grilleOriginale;
+    public Set<Integer>[][] possibilites;
 
     public Deduction(int[][] grilleInitiale) {
         this.taille = grilleInitiale.length;
@@ -48,7 +48,7 @@ public class Deduction {
     /**
      * Vérifie si une valeur peut être placée à une position donnée.
      */
-    private boolean estValide(int ligne, int colonne, int valeur) {
+    public boolean estValide(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
             if (grille[ligne][j] == valeur) return false;
         }
@@ -114,7 +114,7 @@ public class Deduction {
     /**
      * Met à jour les possibilités après avoir placé une valeur.
      */
-    private void miseAJourPossibilites(int ligne, int colonne, int valeur) {
+    public void miseAJourPossibilites(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
             possibilites[ligne][j].remove(valeur);
         }
@@ -142,7 +142,7 @@ public class Deduction {
         return null;
     }
 
-    private boolean estValeurUnique(int ligne, int colonne, int valeur) {
+    public boolean estValeurUnique(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
             if (j != colonne && possibilites[ligne][j].contains(valeur)) return false;
         }

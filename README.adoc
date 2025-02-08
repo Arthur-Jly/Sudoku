@@ -1,9 +1,10 @@
 = Solveur de Sudoku et Multidoku
 
-Ce projet est un solveur de Sudoku et Multidoku en ligne de commande. L'utilisateur peut choisir la taille de la grille, entrer les valeurs initiales et sélectionner le mode de résolution.
+Ce projet est un solveur de Sudoku et Multidoku en ligne de commande ou affiche graphique. L'utilisateur peut choisir la taille de la grille, entrer les valeurs initiales et sélectionner le mode de résolution.
 
 == Fonctionnalités
 - Choix de la taille de la grille
+- Mode graphique ou textuel
 - Mode Sudoku classique
 - Mode Multidoku (avec gestion des blocs personnalisés)
 - Différents algorithmes de résolution

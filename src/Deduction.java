@@ -202,7 +202,7 @@ public class Deduction {
             for (int j = 0; j < taille; j++) {
                 System.out.print(grille[i][j] + " ");
             }
-            System.println();
+            System.out.println();
         }
     }
 

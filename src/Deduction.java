@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Deduction {
-    private final int taille;
-    private final int tailleBloc;
-    private int[][] grille;
-    private final int[][] grilleOriginale;
-    private Set<Integer>[][] possibilites;
-    private DeductionRuleManager ruleManager;
-    private PrintWriter logWriter;
-
+    public final int taille;
+    public final int tailleBloc;
+    public int[][] grille;
+    public final int[][] grilleOriginale;
+    public Set<Integer>[][] possibilites; 
+    public DeductionRuleManager ruleManager;
+    public PrintWriter logWriter;
+    
     // Constructeur original (pour la compatibilité)
     public Deduction(int[][] grilleInitiale) {
         this(grilleInitiale, new DeductionRuleManager()); // Utilise les règles par défaut
@@ -103,8 +103,10 @@ public class Deduction {
         }
     }
 
-    private boolean estValide(int ligne, int colonne, int valeur) {
-        // Vérifier la ligne
+    /**
+     * Vérifie si une valeur peut être placée à une position donnée.
+     */
+    public boolean estValide(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
             if (grille[ligne][j] == valeur) return false;
         }
@@ -175,6 +177,13 @@ public class Deduction {
         }
     }
 
+    public boolean estValeurUnique(int ligne, int colonne, int valeur) {
+        for (int j = 0; j < taille; j++) {
+            if (j != colonne && possibilites[ligne][j].contains(valeur)) return false;
+        }
+        return true;
+    }
+
     private boolean estComplet() {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
@@ -193,7 +202,7 @@ public class Deduction {
             for (int j = 0; j < taille; j++) {
                 System.out.print(grille[i][j] + " ");
             }
-            System.out.println();
+            System.println();
         }
     }
 

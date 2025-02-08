@@ -1,0 +1,49 @@
+= Solveur de Sudoku et Multidoku
+
+Ce projet est un solveur de Sudoku et Multidoku en ligne de commande. L'utilisateur peut choisir la taille de la grille, entrer les valeurs initiales et sélectionner le mode de résolution.
+
+== Fonctionnalités
+- Choix de la taille de la grille
+- Mode Sudoku classique
+- Mode Multidoku (avec gestion des blocs personnalisés)
+- Différents algorithmes de résolution
+- Affichage de la grille résolue
+
+== Utilisation
+. **Choisir la taille de la grille**
+. **Sélectionner le type de jeu** : Sudoku ou Multidoku
+. **Entrer les nombres** de la grille initiale
+. **Pour le Multidoku**, définir les blocs
+. **Choisir le mode de résolution**
+. **Récupérer la grille résolue**
+
+== Installation
+
+=== Cloner le dépôt
+[source,sh]
+----
+git clone https://github.com/ArthurJoly/SudokuSolver.git
+cd SudokuSolver
+----
+
+=== Compilation
+Assurez-vous d'avoir un compilateur Java installé, puis compilez le projet :
+[source,sh]
+----
+javac -d bin src/*.java
+----
+
+=== Exécution
+Lancez le programme avec :
+[source,sh]
+----
+java -cp bin Main
+----
+
+== Auteurs
+Ce projet a été développé par :
+- Arthur Joly
+- Amine Mounib
+- Louis Ferret
+- Mouhamed Kandji
+

@@ -35,7 +35,7 @@ public class MultidokuModeTexte extends SudokuModeTexte {
                 int colonne = scanner.nextInt();
                 int valeur = scanner.nextInt();
 
-                scanner.nextLine(); // Consommer le retour à la ligne restant
+                scanner.nextLine(); 
 
                 if (ligne >= 0 && ligne < taille && colonne >= 0 && colonne < taille) {
                     if (valeur >= 1 && valeur <= taille) {
@@ -91,33 +91,75 @@ public class MultidokuModeTexte extends SudokuModeTexte {
     private void definirBlocs(Scanner scanner) {
         System.out.println("Pour chaque position, entrez le numéro du bloc (1-" + taille + ")");
         
-        for (int ligne = 0; ligne < taille; ligne++) {
-            for (int colonne = 0; colonne < taille; colonne++) {
-                boolean entreeValide = false;
-                
-                while (!entreeValide) {
-                    afficherGrilleBlocs();
-                    System.out.printf("Position [%d,%d] - Entrez le numéro du bloc: ", ligne, colonne);
-                    try {
-                        int bloc = scanner.nextInt();
-                        scanner.nextLine(); // Consommer le retour à la ligne
-                        
-                        if (bloc >= 1 && bloc <= taille) {
-                            blocs[ligne][colonne] = bloc;
-                            entreeValide = true;
-                        } else {
-                            System.out.println("Erreur: Le numéro doit être entre 1 et " + taille);
+        boolean grilleValide = false;
+        
+        while (!grilleValide) {
+            // Réinitialiser les blocs à chaque tentative
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                    blocs[i][j] = 0;
+                }
+            }
+            
+            // Demander à l'utilisateur de remplir les blocs
+            for (int ligne = 0; ligne < taille; ligne++) {
+                for (int colonne = 0; colonne < taille; colonne++) {
+                    boolean entreeValide = false;
+                    
+                    while (!entreeValide) {
+                        afficherGrilleBlocs();
+                        System.out.printf("Position [%d,%d] - Entrez le numéro du bloc: ", ligne, colonne);
+                        try {
+                            int bloc = scanner.nextInt();
+                            scanner.nextLine(); 
+                            
+                            if (bloc >= 1 && bloc <= taille) {
+                                blocs[ligne][colonne] = bloc;
+                                entreeValide = true;
+                            } else {
+                                System.out.println("Erreur: Le numéro doit être entre 1 et " + taille);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Erreur: Veuillez entrer un nombre valide");
+                            scanner.nextLine(); 
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Erreur: Veuillez entrer un nombre valide");
-                        scanner.nextLine(); // Consommer l'entrée invalide
                     }
                 }
+            }
+            
+            // Vérifier si les blocs sont valides
+            if (verifierBlocsValides()) {
+                grilleValide = true; 
+            } else {
+                System.out.println("Certains blocs sont invalides, veuillez réessayer.");
             }
         }
         
         System.out.println("\nDéfinition des blocs terminée!");
         afficherGrilleBlocs();
+    }
+
+    // Méthode pour vérifier si les blocs sont valides
+    private boolean verifierBlocsValides() {
+        int[] compteBlocs = new int[taille + 1];
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                int bloc = blocs[i][j];
+                if (bloc > 0 && bloc <= taille) {
+                    compteBlocs[bloc]++;
+                }
+            }
+        }
+
+        // Vérifier que chaque bloc ne contient pas plus de cases que la taille
+        for (int i = 1; i <= taille; i++) {
+            if (compteBlocs[i] > taille) {
+                System.out.println("Le bloc " + i + " contient trop de cases.");
+                return false; 
+            }
+        }
+        
+        return true; 
     }
 
     private void afficherGrilleBlocs() {
@@ -145,6 +187,7 @@ public class MultidokuModeTexte extends SudokuModeTexte {
 
     protected void afficherGrille(int[][] grille, int taille) {
         System.out.println("\nGrille actuelle (format: valeur(bloc)):");
+
         int tailleBloc = (int) Math.sqrt(taille);
         String ligneSeparatrice = "-".repeat(taille * 6 + tailleBloc);
         System.out.println(ligneSeparatrice);

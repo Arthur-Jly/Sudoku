@@ -28,21 +28,21 @@ git clone https://github.com/Arthur-Jly/Sudoku.git
 === Puis mettez vous dans le bon répertoire
 [source,sh]
 ----
-cd src
+cd Sudoku
 ----
 
 === Compilation
 Assurez-vous d'avoir un compilateur Java installé, puis compilez le projet :
 [source,sh]
 ----
-
+javac src/Main.java
 ----
 
 === Exécution
 Lancez le programme avec :
 [source,sh]
 ----
-
+java Main
 ----
 
 == Auteurs

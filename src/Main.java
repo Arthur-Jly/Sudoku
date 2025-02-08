@@ -1,6 +1,4 @@
 import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
 import javax.swing.*;
 
 public class Main {
@@ -51,30 +49,64 @@ public class Main {
                 return;
             }
 
+            // Demander à l'utilisateur quel type de jeu il préfère
+            String[] jeuxOptions = {"Sudoku", "Multidoku"};
+            int choixJeu = JOptionPane.showOptionDialog(
+                    null,
+                    "Choisissez le type de jeu :",
+                    "Type de jeu",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    jeuxOptions,
+                    jeuxOptions[0]
+            );
+
+            // Créer l'objet grille en fonction du choix de l'utilisateur
+            Grille grille;
+            if (choixJeu == 0) {
+                grille = new Grille(taille); // Si l'utilisateur choisit Sudoku
+            } else {
+                grille = new Multidoku(taille); // Si l'utilisateur choisit Multidoku
+            }
+
             // Demander à l'utilisateur quel mode il préfère
-            String[] options = {"Graphique", "Texte"};
+            String[] modesOptions = {"Graphique", "Texte"};
             int choixMode = JOptionPane.showOptionDialog(
                     null,
-                    "Choisissez le mode de jeu :",
+                    "Choisissez le mode d'affchage :",
                     "Mode de jeu",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
                     null,
-                    options,
-                    options[0]
+                    modesOptions,
+                    modesOptions[0]
             );
-
-            Grille grille = new Multidoku(taille);
 
             // Mode graphique
             if (choixMode == 0) {
-                SudokuModeGraphique modeGraphique = new MultidokuModeGraphique(grille);
-                modeGraphique.initialiserGrille();
+                if (choixJeu == 0) {
+                    SudokuModeGraphique modeGraphique = new SudokuModeGraphique(grille);
+                    modeGraphique.initialiserGrille();
+                } else {
+                    MultidokuModeGraphique modeGraphique = new MultidokuModeGraphique(grille);
+                    modeGraphique.initialiserGrille();
+                }
             }
             // Mode texte
             else if (choixMode == 1) {
+
                 SudokuModeTexte modeTexte = new MultidokuModeTexte(grille);
                 modeTexte.demarrerJeu();
+              
+                if (choixJeu == 0) {
+                    SudokuModeTexte modeTexte = new SudokuModeTexte(grille);
+                    modeTexte.demarrerJeu();
+                } else {
+                    MultidokuModeTexte modeTexte = new MultidokuModeTexte(grille);
+                    modeTexte.demarrerJeu();
+                }
+
             }
 
         } catch (NumberFormatException e) {

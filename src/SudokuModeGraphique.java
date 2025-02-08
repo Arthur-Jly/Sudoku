@@ -16,7 +16,7 @@ public class SudokuModeGraphique extends JFrame {
         configurerInterface();
     }
 
-    private void configurerInterface() {
+    public void configurerInterface() {
         setTitle("Grille Sudoku");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

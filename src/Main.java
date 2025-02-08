@@ -95,10 +95,6 @@ public class Main {
             }
             // Mode texte
             else if (choixMode == 1) {
-
-                SudokuModeTexte modeTexte = new MultidokuModeTexte(grille);
-                modeTexte.demarrerJeu();
-              
                 if (choixJeu == 0) {
                     SudokuModeTexte modeTexte = new SudokuModeTexte(grille);
                     modeTexte.demarrerJeu();
@@ -106,7 +102,6 @@ public class Main {
                     MultidokuModeTexte modeTexte = new MultidokuModeTexte(grille);
                     modeTexte.demarrerJeu();
                 }
-
             }
 
         } catch (NumberFormatException e) {

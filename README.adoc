@@ -23,7 +23,12 @@ Ce projet est un solveur de Sudoku et Multidoku en ligne de commande. L'utilisat
 [source,sh]
 ----
 git clone https://github.com/Arthur-Jly/Sudoku.git
-cd Sudoku
+----
+
+=== Puis mettez vous dans le bon répertoire
+[source,sh]
+----
+cd src
 ----
 
 === Compilation

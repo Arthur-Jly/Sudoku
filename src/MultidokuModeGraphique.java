@@ -84,6 +84,9 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         boutonChangerBloc = new JButton("Changer de bloc (Bloc actuel : " + blocActuel + ")");
         boutonChangerBloc.addActionListener(e -> {
             if (modeDefinitionBlocs) {
+                if (!verifierNombreCasesBlocActuel()) {
+                    return;
+                }
                 blocActuel = blocActuel % grille.getTaille() + 1;
                 boutonChangerBloc.setText("Changer de bloc (Bloc actuel : " + blocActuel + ")");
             }
@@ -162,12 +165,41 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     }
 
     private boolean tousBlocksDefinis() {
-        for (int[] ligne : blocs) {
-            for (int bloc : ligne) {
-                if (bloc == 0) {
-                    return false;
+        int tailleBloc = grille.getTaille();
+        int casesParBloc = tailleBloc; // Nombre de cases par bloc
+
+        for (int numBloc = 1; numBloc <= tailleBloc; numBloc++) {
+            int count = 0;
+            for (int[] ligne : blocs) {
+                for (int bloc : ligne) {
+                    if (bloc == numBloc) {
+                        count++;
+                    }
                 }
             }
+            if (count != casesParBloc) {
+                JOptionPane.showMessageDialog(this, "Le bloc " + numBloc + " doit contenir exactement " + casesParBloc + " cases.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean verifierNombreCasesBlocActuel() {
+        int tailleBloc = grille.getTaille();
+        int casesParBloc = tailleBloc; // Nombre de cases par bloc
+
+        int count = 0;
+        for (int[] ligne : blocs) {
+            for (int bloc : ligne) {
+                if (bloc == blocActuel) {
+                    count++;
+                }
+            }
+        }
+        if (count != casesParBloc) {
+            JOptionPane.showMessageDialog(this, "Le bloc " + blocActuel + " doit contenir exactement " + casesParBloc + " cases.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
     }

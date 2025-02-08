@@ -5,6 +5,10 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public class MultidokuModeGraphique extends SudokuModeGraphique {
+    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_HEIGHT = 800;
+    private static final int BUTTON_FONT_SIZE = 20;
+    
     public JButton[][] boutonsBlocs;
     public int[][] blocs;
     public int blocActuel = 1;
@@ -13,7 +17,8 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     public JButton boutonValider;
     public boolean modeDefinitionBlocs = true;
     public JPanel panneauGrille;
-    Color[] couleursBlocs = {
+    
+    private Color[] couleursBlocs = {
         new Color(173, 216, 230), // Bleu clair
         new Color(255, 228, 225), // Rose clair
         new Color(255, 255, 224), // Jaune pâle
@@ -24,143 +29,169 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         new Color(221, 160, 221)  // Lavande clair
     };
 
-    private JButton boutonResolutionDeduction;
-    private JButton boutonResolutionBacktracking;
-
     public MultidokuModeGraphique(Grille grille) {
         super(grille);
         this.blocs = new int[grille.getTaille()][grille.getTaille()];
         this.boutonsBlocs = new JButton[grille.getTaille()][grille.getTaille()];
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         configurerBlocs();
     }
 
+    private int compterCasesBloc(int numBloc) {
+        int count = 0;
+        for (int i = 0; i < grille.getTaille(); i++) {
+            for (int j = 0; j < grille.getTaille(); j++) {
+                if (blocs[i][j] == numBloc) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private JButton creerBoutonAction(String texte, ActionListener action) {
+        JButton bouton = new JButton(texte);
+        bouton.addActionListener(action);
+        return bouton;
+    }
+
+    private JButton creerBoutonBloc(int ligne, int colonne) {
+        JButton boutonBloc = new JButton();
+        boutonBloc.setBackground(Color.WHITE);
+        boutonBloc.setOpaque(true);
+        boutonBloc.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        boutonBloc.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (modeDefinitionBlocs) {
+                    if (blocs[ligne][colonne] == 0) {
+                        if (compterCasesBloc(blocActuel) >= grille.getTaille()) {
+                            JOptionPane.showMessageDialog(null, 
+                                "Le bloc " + blocActuel + " a déjà atteint le nombre maximum de cases autorisées (" + grille.getTaille() + ")");
+                            return;
+                        }
+                        blocs[ligne][colonne] = blocActuel;
+                        boutonBloc.setBackground(couleursBlocs[blocActuel - 1]);
+                    } else {
+                        blocs[ligne][colonne] = 0;
+                        boutonBloc.setBackground(Color.WHITE);
+                    }
+                }
+            }
+        });
+        return boutonBloc;
+    }
+
+    private JTextField creerChampTexte(int ligne, int colonne) {
+        JTextField champ = new JTextField(2);
+        champ.setHorizontalAlignment(JTextField.CENTER);
+        champ.setFont(new Font("Arial", Font.BOLD, BUTTON_FONT_SIZE));
+        champ.setVisible(false);
+        champ.setEditable(false);
+        champ.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                validerEntree(champ, ligne, colonne);
+            }
+        });
+        return champ;
+    }
+
     private void configurerBlocs() {
-        panneauGrille = new JPanel(new GridLayout(grille.getTaille(), grille.getTaille(), 1, 1));
+        JPanel panneauPrincipal = new JPanel(new BorderLayout(10, 10));
+        panneauPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        panneauGrille = new JPanel(new GridLayout(grille.getTaille(), grille.getTaille(), 2, 2));
         panneauGrille.setBorder(BorderFactory.createTitledBorder("Définir les blocs"));
+
         for (int ligne = 0; ligne < grille.getTaille(); ligne++) {
             for (int colonne = 0; colonne < grille.getTaille(); colonne++) {
-                JButton boutonBloc = new JButton();
-                boutonBloc.setBackground(Color.WHITE);
-                boutonBloc.setOpaque(true);
-                boutonBloc.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-                JTextField champ = new JTextField(2);
-                champ.setHorizontalAlignment(JTextField.CENTER);
-                champ.setFont(new Font("Arial", Font.BOLD, 20));
-                champ.setVisible(false);
-                champ.setEditable(false);
-
-                final int l = ligne;
-                final int c = colonne;
-                
-                boutonBloc.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (modeDefinitionBlocs) {
-                            if (blocs[l][c] == 0) {
-                                blocs[l][c] = blocActuel;
-                                boutonBloc.setBackground(couleursBlocs[blocActuel - 1]);
-                            } else {
-                                blocs[l][c] = 0;
-                                boutonBloc.setBackground(Color.WHITE);
-                            }
-                        }
-                    }
-                });
-
-                champ.addFocusListener(new FocusAdapter() {
-                    @Override
-                    public void focusLost(FocusEvent e) {
-                        validerEntree(champ, l, c);
-                    }
-                });
-
-                boutonsBlocs[ligne][colonne] = boutonBloc;
-                champsTexte[ligne][colonne] = champ;
-                panneauGrille.add(boutonBloc);
+                boutonsBlocs[ligne][colonne] = creerBoutonBloc(ligne, colonne);
+                champsTexte[ligne][colonne] = creerChampTexte(ligne, colonne);
+                panneauGrille.add(boutonsBlocs[ligne][colonne]);
             }
         }
 
-        boutonChangerBloc = new JButton("Changer de bloc (Bloc actuel : " + blocActuel + ")");
-        boutonChangerBloc.addActionListener(e -> {
-            if (modeDefinitionBlocs) {
-                blocActuel = blocActuel % grille.getTaille() + 1;
-                boutonChangerBloc.setText("Changer de bloc (Bloc actuel : " + blocActuel + ")");
-            }
-        });
+        JPanel panneauBoutons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
-        boutonValider = new JButton("Valider les blocs");
-        boutonValider.addActionListener(e -> {
-            if (tousBlocksDefinis()) {
-                modeDefinitionBlocs = false;
-                JOptionPane.showMessageDialog(this, "Les blocs ont été validés. Vous pouvez maintenant saisir les valeurs.");
-                activerSaisieValeurs();
-                boutonValiderNombres.setEnabled(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Tous les blocs doivent être définis avant validation.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        boutonChangerBloc = creerBoutonAction("Changer de bloc (Bloc actuel : " + blocActuel + ")", 
+            e -> {
+                if (modeDefinitionBlocs) {
+                    blocActuel = blocActuel % grille.getTaille() + 1;
+                    boutonChangerBloc.setText("Changer de bloc (Bloc actuel : " + blocActuel + ")");
+                }
+            });
 
-        boutonValiderNombres = new JButton("Valider les nombres");
+        boutonValider = creerBoutonAction("Valider les blocs", 
+            e -> {
+                if (tousBlocksDefinis()) {
+                    modeDefinitionBlocs = false;
+                    JOptionPane.showMessageDialog(this, "Les blocs ont été validés. Vous pouvez maintenant saisir les valeurs.");
+                    activerSaisieValeurs();
+                    boutonValiderNombres.setEnabled(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tous les blocs doivent être définis avant validation.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
+        boutonValiderNombres = creerBoutonAction("Valider les nombres", 
+            e -> {
+                if (verifierMultidoku()) {
+                    JOptionPane.showMessageDialog(this, "Les nombres sont enregistrés ! Vous pouvez choisir une méthode de résolution.");
+                    boutonValiderNombres.setEnabled(false);
+                    boutonResolutionDeduction.setEnabled(true);
+                    boutonResolutionBacktracking.setEnabled(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "La grille n'est pas valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            });
         boutonValiderNombres.setEnabled(false);
-        boutonValiderNombres.addActionListener(e -> {
-            boolean valide = verifierMultidoku();
-            if (valide) {
-                JOptionPane.showMessageDialog(this, "Les nombres sont enregistrés ! Vous pouvez choisir une méthode de résolution.");
-                boutonValiderNombres.setEnabled(false); 
-                boutonResolutionDeduction.setEnabled(true);
-                boutonResolutionBacktracking.setEnabled(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "La grille n'est pas valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            }
-        });
 
-        boutonResolutionDeduction = new JButton("Résolution par déduction");
-        boutonResolutionDeduction.setEnabled(false);
-        boutonResolutionDeduction.addActionListener(e -> {
-            Deduction deduction = new Deduction(grille.getGrilleValeurs());
-            if (deduction.resoudreSudoku()) {
-                afficher_GrilleGraphique(deduction.getGrilleResolue(), blocs);
-            } else {
-                JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue par déduction.");
-            }
-        });
+        JButton boutonResolutionDeduction = creerBoutonAction("Résolution par Déduction", 
+            e -> {
+                MultidokuDeduction solveur = new MultidokuDeduction(getGrilleValeurs(), blocs);
+                if (solveur.resoudreSudoku()) {
+                    afficher_GrilleGraphique(solveur.getGrilleResolue(), blocs);
+                } else {
+                    JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue par déduction.");
+                }
+            });
 
-        boutonResolutionBacktracking = new JButton("Résolution par backtracking");
-        boutonResolutionBacktracking.setEnabled(false);
-        boutonResolutionBacktracking.addActionListener(e -> {
-            Backtracking solveur = new Backtracking(grille.getGrilleValeurs());
-            if (!solveur.resoudreSudoku()) {
-                JOptionPane.showMessageDialog(this, "La grille n'est pas résolvable !");
-            } else {
-                afficher_GrilleGraphique(solveur.getGrilleResolue(), blocs);
-            }
-        });
+        JButton boutonResolutionBacktracking = creerBoutonAction("Résolution par Backtracking", 
+            e -> {
+                MultidokuBacktracking solveur = new MultidokuBacktracking(getGrilleValeurs(), blocs);
+                if (solveur.resoudreSudoku()) {
+                    afficher_GrilleGraphique(solveur.getGrilleResolue(), blocs);
+                } else {
+                    JOptionPane.showMessageDialog(this, "La grille n'est pas résolvable !");
+                }
+            });
 
-        // Ajouter les boutons au panneau
-        JPanel panelBoutons = new JPanel();
-        panelBoutons.setLayout(new GridLayout(1, 3));
-        panelBoutons.add(boutonValiderNombres);
-        panelBoutons.add(boutonResolutionDeduction);
-        panelBoutons.add(boutonResolutionBacktracking);
-
-        add(panelBoutons, BorderLayout.SOUTH);
-
-        JPanel panneauPrincipal = (JPanel) getContentPane().getComponent(0);
-        panneauPrincipal.add(panneauGrille, BorderLayout.CENTER);
-
-        JPanel panneauBoutons = new JPanel();
+        // Ajout des boutons au panneau
         panneauBoutons.add(boutonChangerBloc);
         panneauBoutons.add(boutonValider);
         panneauBoutons.add(boutonValiderNombres);
         panneauBoutons.add(boutonResolutionDeduction);
         panneauBoutons.add(boutonResolutionBacktracking);
+
+        panneauPrincipal.add(panneauGrille, BorderLayout.CENTER);
         panneauPrincipal.add(panneauBoutons, BorderLayout.SOUTH);
 
-        revalidate();
-        repaint();
+        setContentPane(panneauPrincipal);
+        setLocationRelativeTo(null);
     }
 
+    private int[][] getGrilleValeurs() {
+        int[][] grilleValeurs = new int[taille][taille];
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                String texte = champsTexte[ligne][colonne].getText().trim();
+                grilleValeurs[ligne][colonne] = texte.isEmpty() ? 0 : Integer.parseInt(texte);
+            }
+        }
+        return grilleValeurs;
+    }
+    
     private boolean tousBlocksDefinis() {
         for (int[] ligne : blocs) {
             for (int bloc : ligne) {

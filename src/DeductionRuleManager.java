@@ -6,60 +6,59 @@ public class DeductionRuleManager {
 
     public DeductionRuleManager() {
         this.reglesActives = new HashSet<>();
-        // Par défaut, on active uniquement la règle SINGLE_CANDIDATE
+        // Par défaut, on active les règles de base
         reglesActives.add(DeductionRuleType.SINGLE_CANDIDATE);
+        reglesActives.add(DeductionRuleType.UNIQUE_VALUE);
     }
 
     public boolean appliquerRegles(int[][] grille, Set<Integer>[][] possibilites) {
         boolean modification = false;
 
         for (DeductionRuleType regle : reglesActives) {
-            if (regle == DeductionRuleType.SINGLE_CANDIDATE) {
-                modification |= appliquerCandidatUnique(grille, possibilites);
+            switch (regle) {
+                case SINGLE_CANDIDATE:
+                    modification |= appliquerCandidatUnique(grille, possibilites);
+                    break;
+                case UNIQUE_VALUE:
+                    modification |= appliquerValeurUnique(grille, possibilites);
+                    break;
+                case HIDDEN_SINGLE:
+                    modification |= appliquerSingleCache(grille, possibilites);
+                    break;
+                case NAKED_PAIRS:
+                    modification |= appliquerPairesNues(grille, possibilites);
+                    break;
+                case POINTING_PAIRS:
+                    modification |= appliquerPairesPointantes(grille, possibilites);
+                    break;
             }
         }
         return modification;
     }
 
     private boolean appliquerCandidatUnique(int[][] grille, Set<Integer>[][] possibilites) {
-        boolean modification = false;
-
-        for (int i = 0; i < grille.length; i++) {
-            for (int j = 0; j < grille[i].length; j++) {
-                if (grille[i][j] == 0 && possibilites[i][j].size() == 1) {
-                    int valeur = possibilites[i][j].iterator().next();
-                    grille[i][j] = valeur;
-                    miseAJourPossibilites(grille, possibilites, i, j, valeur);
-                    modification = true;
-                }
-            }
-        }
-
-        return modification;
+        // TODO: Implémenter la règle du candidat unique
+        return false;
     }
 
-    private void miseAJourPossibilites(int[][] grille, Set<Integer>[][] possibilites, int ligne, int colonne, int valeur) {
-        int taille = grille.length;
-        int tailleBloc = (int) Math.sqrt(taille);
+    private boolean appliquerValeurUnique(int[][] grille, Set<Integer>[][] possibilites) {
+        // TODO: Implémenter la règle de la valeur unique
+        return false;
+    }
 
-        // Mettre à jour la ligne
-        for (int j = 0; j < taille; j++) {
-            possibilites[ligne][j].remove(valeur);
-        }
+    private boolean appliquerSingleCache(int[][] grille, Set<Integer>[][] possibilites) {
+        // TODO: Implémenter la règle du single caché
+        return false;
+    }
 
-        // Mettre à jour la colonne
-        for (int i = 0; i < taille; i++) {
-            possibilites[i][colonne].remove(valeur);
-        }
+    private boolean appliquerPairesNues(int[][] grille, Set<Integer>[][] possibilites) {
+        // TODO: Implémenter la règle des paires nues
+        return false;
+    }
 
-        // Mettre à jour le bloc
-        int debutBloc_i = (ligne / tailleBloc) * tailleBloc;
-        int debutBloc_j = (colonne / tailleBloc) * tailleBloc;
-        for (int i = debutBloc_i; i < debutBloc_i + tailleBloc; i++) {
-            for (int j = debutBloc_j; j < debutBloc_j + tailleBloc; j++) {
-                possibilites[i][j].remove(valeur);
-            }
-        }
+    private boolean appliquerPairesPointantes(int[][] grille, Set<Integer>[][] possibilites) {
+        // TODO: Implémenter la règle des paires pointantes
+        return false;
     }
 
     public void activerRegle(DeductionRuleType regle) {

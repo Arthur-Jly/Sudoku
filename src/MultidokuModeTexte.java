@@ -74,7 +74,7 @@ public class MultidokuModeTexte extends SudokuModeTexte {
                 afficherGrille(solveur.getGrilleResolue(), taille);
             }
         } else if (choix == 2) {
-            Deduction deduction = new MultidokuDeduction(grilleValeurs, blocs);
+            Deduction deduction = new Deduction(grilleValeurs);
             if (!deduction.resoudreSudoku()) {
                 System.out.println("\nLa grille ne peut pas être résolue par déduction.");
             } else {

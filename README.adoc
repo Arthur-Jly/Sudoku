@@ -22,22 +22,22 @@ Ce projet est un solveur de Sudoku et Multidoku en ligne de commande. L'utilisat
 === Cloner le dépôt
 [source,sh]
 ----
-git clone https://github.com/ArthurJoly/SudokuSolver.git
-cd SudokuSolver
+https://github.com/Arthur-Jly/Sudoku.git
+cd Sudoku
 ----
 
 === Compilation
 Assurez-vous d'avoir un compilateur Java installé, puis compilez le projet :
 [source,sh]
 ----
-javac -d bin src/*.java
+
 ----
 
 === Exécution
 Lancez le programme avec :
 [source,sh]
 ----
-java -cp bin Main
+
 ----
 
 == Auteurs

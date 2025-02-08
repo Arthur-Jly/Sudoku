@@ -26,6 +26,8 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
 
     private JButton boutonResolutionDeduction;
     private JButton boutonResolutionBacktracking;
+    private JButton boutonResolutionCombine;
+
 
     public MultidokuModeGraphique(Grille grille) {
         super(grille);
@@ -84,9 +86,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         boutonChangerBloc = new JButton("Changer de bloc (Bloc actuel : " + blocActuel + ")");
         boutonChangerBloc.addActionListener(e -> {
             if (modeDefinitionBlocs) {
-                if (!verifierNombreCasesBlocActuel()) {
-                    return;
-                }
                 blocActuel = blocActuel % grille.getTaille() + 1;
                 boutonChangerBloc.setText("Changer de bloc (Bloc actuel : " + blocActuel + ")");
             }
@@ -113,6 +112,8 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
                 boutonValiderNombres.setEnabled(false); 
                 boutonResolutionDeduction.setEnabled(true);
                 boutonResolutionBacktracking.setEnabled(true);
+                boutonResolutionCombine.setEnabled(true);
+
             } else {
                 JOptionPane.showMessageDialog(this, "La grille n'est pas valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
@@ -139,15 +140,22 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
                 afficher_GrilleGraphique(solveur.getGrilleResolue(), blocs);
             }
         });
+        
+        boutonResolutionCombine = new JButton("Résolution combinée");
+        boutonResolutionCombine.setEnabled(false);
+        boutonResolutionCombine.addActionListener(e -> {
+            ResolveurCombine resolveur = new ResolveurCombine(grille.getGrilleValeurs());
+            if (!resolveur.resoudreSudoku()) {
+                JOptionPane.showMessageDialog(this, "La grille n'est pas résolvable !");
+            } else {
+                afficher_GrilleGraphique(resolveur.getGrilleResolue(), blocs);
+            }
+        });
+        
 
-        // Ajouter les boutons au panneau
-        JPanel panelBoutons = new JPanel();
-        panelBoutons.setLayout(new GridLayout(1, 3));
-        panelBoutons.add(boutonValiderNombres);
-        panelBoutons.add(boutonResolutionDeduction);
-        panelBoutons.add(boutonResolutionBacktracking);
+        
 
-        add(panelBoutons, BorderLayout.SOUTH);
+
 
         JPanel panneauPrincipal = (JPanel) getContentPane().getComponent(0);
         panneauPrincipal.add(panneauGrille, BorderLayout.CENTER);
@@ -158,48 +166,21 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         panneauBoutons.add(boutonValiderNombres);
         panneauBoutons.add(boutonResolutionDeduction);
         panneauBoutons.add(boutonResolutionBacktracking);
+        panneauBoutons.add(boutonResolutionCombine);
         panneauPrincipal.add(panneauBoutons, BorderLayout.SOUTH);
 
         revalidate();
         repaint();
+        setSize(1200, 800);
     }
 
     private boolean tousBlocksDefinis() {
-        int tailleBloc = grille.getTaille();
-        int casesParBloc = tailleBloc; // Nombre de cases par bloc
-
-        for (int numBloc = 1; numBloc <= tailleBloc; numBloc++) {
-            int count = 0;
-            for (int[] ligne : blocs) {
-                for (int bloc : ligne) {
-                    if (bloc == numBloc) {
-                        count++;
-                    }
-                }
-            }
-            if (count != casesParBloc) {
-                JOptionPane.showMessageDialog(this, "Le bloc " + numBloc + " doit contenir exactement " + casesParBloc + " cases.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean verifierNombreCasesBlocActuel() {
-        int tailleBloc = grille.getTaille();
-        int casesParBloc = tailleBloc; // Nombre de cases par bloc
-
-        int count = 0;
         for (int[] ligne : blocs) {
             for (int bloc : ligne) {
-                if (bloc == blocActuel) {
-                    count++;
+                if (bloc == 0) {
+                    return false;
                 }
             }
-        }
-        if (count != casesParBloc) {
-            JOptionPane.showMessageDialog(this, "Le bloc " + blocActuel + " doit contenir exactement " + casesParBloc + " cases.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            return false;
         }
         return true;
     }
@@ -283,7 +264,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
                 panneauGrille.add(champ);
             }
         }
-
+        
         boutonChangerBloc.setEnabled(false);
         boutonValider.setEnabled(false);
         boutonValiderNombres.setEnabled(true);
@@ -292,29 +273,43 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         panneauGrille.repaint();
     }
 
-    @Override
-    public void validerEntree(JTextField champ, int ligne, int colonne) {
-        if (!modeDefinitionBlocs) {
-            String entree = champ.getText().trim();
-            if (!entree.isEmpty()) {
-                try {
-                    int valeur = Integer.parseInt(entree);
-                    if (valeur >= 1 && valeur <= grille.getTaille()) {
-                        grille.validerEntree(ligne, colonne, valeur);
-                        champ.setForeground(Color.BLUE);
-                    } else {
-                        champ.setText("");
-                        JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre entre 1 et " + grille.getTaille());
-                    }
-                } catch (NumberFormatException ex) {
-                    champ.setText("");
-                    JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre valide.");
-                }
-            } else {
-                grille.validerEntree(ligne, colonne, 0);
+   @Override
+public void validerEntree(JTextField champ, int ligne, int colonne) {
+    if (!modeDefinitionBlocs) {
+        String entree = champ.getText().trim();
+
+        if (entree.isEmpty()) {
+            return;
+        }
+
+        try {
+            int valeur = Integer.parseInt(entree);
+
+            // Vérifier que la valeur est valide
+            if (valeur < 1 || valeur > grille.getTaille()) {
+                throw new IllegalArgumentException("Valeur invalide. Elle doit être comprise entre 1 et " + grille.getTaille());
             }
+
+            // Vérifier si le bloc a bien été défini avant de valider l'entrée
+            if (blocs[ligne][colonne] == 0) {
+                JOptionPane.showMessageDialog(this, "Définissez les blocs avant de saisir des nombres.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                champ.setText(""); // Efface la valeur erronée
+                return;
+            }
+
+            grille.validerEntree(ligne, colonne, valeur);
+            champ.setForeground(Color.BLUE);
+        } catch (NumberFormatException e) {
+            champ.setText(""); // Efface la valeur erronée
+            JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre entre 1 et " + grille.getTaille(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            champ.setText(""); // Efface la valeur erronée si elle est invalide
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
+}
+
+
 
     public void afficher_GrilleGraphique(int[][] grilleResolue, int[][] blocs) {
         // Fenêtre pour afficher la grille résolue

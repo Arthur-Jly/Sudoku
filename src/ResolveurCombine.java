@@ -20,56 +20,35 @@ public class ResolveurCombine {
             }
         }
         
-        // Initialisation des deux résolveurs
+        // Initialisation des résolveurs
         this.deduction = new Deduction(grilleInitiale);
         this.backtracking = new Backtracking(grilleInitiale);
     }
 
     public boolean resoudreSudoku() {
         System.out.println("\nTentative de résolution par déduction...");
-        
-        // Première étape : essayer la déduction
+
+        // Étape 1 : Essayer la déduction
         if (deduction.resoudreSudoku()) {
             System.out.println("Grille résolue par déduction !");
             this.grille = deduction.getGrilleResolue();
             return true;
         }
 
-        System.out.println("La déduction seule n'a pas suffi, passage au backtracking...");
-        
-        // Si la déduction n'a pas suffi, utiliser le backtracking
-        // On utilise la grille partiellement résolue par déduction
+        System.out.println("Déduction insuffisante, passage au backtracking...");
+
+        // Étape 2 : Si la déduction échoue, utiliser le backtracking
         int[][] grilleIntermediaire = deduction.getGrilleResolue();
         Backtracking backtrackingFinal = new Backtracking(grilleIntermediaire);
         
         if (backtrackingFinal.resoudreSudoku()) {
-            System.out.println("Grille résolue par la combinaison déduction + backtracking !");
+            System.out.println("Grille résolue par la combinaison Déduction + Backtracking !");
             this.grille = backtrackingFinal.getGrilleResolue();
             return true;
         }
 
-        System.out.println("La grille n'a pas pu être résolue !");
+        System.out.println("La grille n'a pas pu être résolue.");
         return false;
-    }
-
-    public void afficherSolution() {
-        System.out.println("\nSolution finale :");
-        System.out.println("-".repeat(taille * 2 + tailleBloc));
-        
-        for (int i = 0; i < taille; i++) {
-            if (i > 0 && i % tailleBloc == 0) {
-                System.out.println("-".repeat(taille * 2 + tailleBloc));
-            }
-            
-            for (int j = 0; j < taille; j++) {
-                if (j > 0 && j % tailleBloc == 0) {
-                    System.out.print("| ");
-                }
-                System.out.print(grille[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("-".repeat(taille * 2 + tailleBloc));
     }
 
     public int[][] getGrilleResolue() {

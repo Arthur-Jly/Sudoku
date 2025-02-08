@@ -20,8 +20,26 @@ public class SudokuModeTexte {
 
             while (!entreeValide) {
                 System.out.println("Entrez la ligne, la colonne (0 à " + (taille - 1) + ") et la valeur à insérer (1 à " + taille + "):");
+                
+                if (!scanner.hasNextInt()) {
+                    System.out.println("Entrée invalide. Veuillez entrer des nombres.");
+                    scanner.next(); // Consomme l'entrée incorrecte
+                    continue;
+                }
                 int ligne = scanner.nextInt();
+
+                if (!scanner.hasNextInt()) {
+                    System.out.println("Entrée invalide. Veuillez entrer des nombres.");
+                    scanner.next();
+                    continue;
+                }
                 int colonne = scanner.nextInt();
+
+                if (!scanner.hasNextInt()) {
+                    System.out.println("Entrée invalide. Veuillez entrer des nombres.");
+                    scanner.next();
+                    continue;
+                }
                 int valeur = scanner.nextInt();
 
                 // Consommer le retour à la ligne restant dans le buffer
@@ -33,31 +51,42 @@ public class SudokuModeTexte {
                         grille.validerEntree(ligne, colonne, valeur);
                         System.out.println("Grille après saisie :");
                         afficherGrille(grilleValeurs, taille);
-                        entreeValide = true; // Saisie correcte
+                        entreeValide = true;
                     } else {
                         System.out.println("Valeur invalide. La valeur doit être comprise entre 1 et " + taille + ".");
                     }
                 } else {
-                    System.out.println("Coordonnées invalides. Veuillez entrer des valeurs dans la plage (0 à " + (taille - 1) + ").");
+                    System.out.println("Coordonnées invalides. Veuillez entrer des valeurs entre 0 et " + (taille - 1) + ".");
                 }
             }
 
             // Vérifier si l'utilisateur veut terminer
             System.out.println("Tapez 'valider' si vous avez terminé de saisir, sinon appuyez sur Enter pour continuer.");
-            String reponse = scanner.nextLine().trim(); // Utilise nextLine pour lire la réponse complète
+            String reponse = scanner.nextLine().trim();
             if ("valider".equalsIgnoreCase(reponse)) {
                 grille.validerGrille();
             }
         }
 
         // Choisir le mode de résolution
-        System.out.println("Choisissez une méthode de résolution :");
-        System.out.println("1. Résolution par Backtracking");
-        System.out.println("2. Résolution par Déduction");
-        int choix = scanner.nextInt();
-        scanner.nextLine();  // Consommer le retour à la ligne restant dans le buffer
+        int choix = -1;
+        while (choix < 1 || choix > 3) {
+            System.out.println("\nChoisissez une méthode de résolution :");
+            System.out.println("1. Résolution par Backtracking");
+            System.out.println("2. Résolution par Déduction");
+            System.out.println("3. Résolution combinée (Déduction + Backtracking)");
 
-        // La grille est validée, on la résout
+            if (scanner.hasNextInt()) {
+                choix = scanner.nextInt();
+            } else {
+                System.out.println("Entrée invalide. Veuillez entrer 1, 2 ou 3.");
+                scanner.next(); // Consomme l'entrée incorrecte
+            }
+        }
+
+        scanner.nextLine(); // Consommer le retour à la ligne
+
+        // La grille est validée, on la résout selon le choix de l'utilisateur
         if (choix == 1) {
             Backtracking solveur = new Backtracking(grilleValeurs);
             if (!solveur.resoudreSudoku()) {
@@ -74,8 +103,14 @@ public class SudokuModeTexte {
                 System.out.println("\nLa grille résolue est :");
                 afficherGrille(deduction.getGrilleResolue(), taille);
             }
-        } else {
-            System.out.println("Choix invalide. Veuillez entrer 1 ou 2.");
+        } else if (choix == 3) {
+            ResolveurCombine resolveur = new ResolveurCombine(grilleValeurs);
+            if (!resolveur.resoudreSudoku()) {
+                System.out.println("\nLa grille ne peut pas être résolue.");
+            } else {
+                System.out.println("\nLa grille résolue par méthode combinée est :");
+                afficherGrille(resolveur.getGrilleResolue(), taille);
+            }
         }
 
         scanner.close();

@@ -23,21 +23,14 @@ public class SudokuModeGraphique extends JFrame {
         JPanel panneauPrincipal = new JPanel(new BorderLayout(10, 10));
         panneauPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Panel pour la grille avec GridLayout
         JPanel panneauGrille = new JPanel(new GridLayout(taille, taille, 1, 1));
         panneauGrille.setBackground(Color.WHITE);
         panneauGrille.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-        // Liste des couleurs à utiliser pour les blocs
         Color[] couleursBlocs = {
-            new Color(173, 216, 230), // Bleu clair
-            new Color(255, 228, 225), // Rose clair
-            new Color(255, 255, 224), // Jaune pâle
-            new Color(144, 238, 144), // Vert pâle
-            new Color(255, 182, 193), // Rose pâle
-            new Color(240, 248, 255), // Bleu pâle
-            new Color(255, 250, 205), // Jaune très pâle
-            new Color(221, 160, 221)  // Lavande clair
+            new Color(173, 216, 230), new Color(255, 228, 225), new Color(255, 255, 224),
+            new Color(144, 238, 144), new Color(255, 182, 193), new Color(240, 248, 255),
+            new Color(255, 250, 205), new Color(221, 160, 221)
         };
 
         for (int ligne = 0; ligne < taille; ligne++) {
@@ -46,18 +39,15 @@ public class SudokuModeGraphique extends JFrame {
                 champ.setHorizontalAlignment(JTextField.CENTER);
                 champ.setFont(new Font("Arial", Font.BOLD, 20));
 
-                // Calculer l'index du bloc (en fonction de la ligne et de la colonne)
                 int blocLigne = ligne / tailleBloc;
                 int blocColonne = colonne / tailleBloc;
                 int indexBloc = blocLigne * tailleBloc + blocColonne;
-
                 champ.setBackground(couleursBlocs[indexBloc % couleursBlocs.length]);
 
-                // Ajouter des bordures pour les blocs
-                boolean bordureDroite = (colonne + 1) % tailleBloc == 0 && colonne < taille - 1;
-                boolean bordureBas = (ligne + 1) % tailleBloc == 0 && ligne < taille - 1;
-
-                champ.setBorder(BorderFactory.createMatteBorder(1, 1, bordureBas ? 2 : 1, bordureDroite ? 2 : 1, Color.BLACK));
+                champ.setBorder(BorderFactory.createMatteBorder(1, 1, 
+                    (ligne + 1) % tailleBloc == 0 && ligne < taille - 1 ? 2 : 1, 
+                    (colonne + 1) % tailleBloc == 0 && colonne < taille - 1 ? 2 : 1, 
+                    Color.BLACK));
 
                 final int l = ligne;
                 final int c = colonne;
@@ -73,130 +63,106 @@ public class SudokuModeGraphique extends JFrame {
             }
         }
 
-        // Panneau des boutons, avec deux boutons pour la résolution
+        // Panel des boutons de résolution
         JPanel panneauBoutons = new JPanel();
-        JButton boutonBacktracking = new JButton("Résolution par Backtracking");
-        JButton boutonDeduction = new JButton("Résolution par Déduction");
+        JButton boutonBacktracking = new JButton("Backtracking");
+        JButton boutonDeduction = new JButton("Déduction");
+        JButton boutonCombiné = new JButton("Résolution Combinée");
 
-        boutonBacktracking.addActionListener(e -> {
-            // Récupérer les valeurs de l'interface graphique et les mettre dans la grille
-            for (int ligne = 0; ligne < taille; ligne++) {
-                for (int colonne = 0; colonne < taille; colonne++) {
-                    String texte = champsTexte[ligne][colonne].getText().trim();
-                    if (!texte.isEmpty()) {
-                        try {
-                            int valeur = Integer.parseInt(texte);
-                            grille.validerEntree(ligne, colonne, valeur); // Mettre à jour la grille avec la valeur de l'utilisateur
-                        } catch (NumberFormatException ex) {
-                            // Si l'utilisateur entre une valeur invalide, ignorer ou afficher un message d'erreur
-                            champsTexte[ligne][colonne].setText("");
-                        }
-                    }
-                }
-            }
-
-            // Résolution par Backtracking
-            Backtracking solveur = new Backtracking(grille.getGrilleValeurs());
-            if (solveur.resoudreSudoku()) {
-                afficherGrilleGraphique(solveur.getGrilleResolue());
-            } else {
-                JOptionPane.showMessageDialog(this, "La grille n'est pas résolvable !");
-            }
-        });
-
-        boutonDeduction.addActionListener(e -> {
-            // Récupérer les valeurs de l'interface graphique et les mettre dans la grille
-            for (int ligne = 0; ligne < taille; ligne++) {
-                for (int colonne = 0; colonne < taille; colonne++) {
-                    String texte = champsTexte[ligne][colonne].getText().trim();
-                    if (!texte.isEmpty()) {
-                        try {
-                            int valeur = Integer.parseInt(texte);
-                            grille.validerEntree(ligne, colonne, valeur); // Mettre à jour la grille avec la valeur de l'utilisateur
-                        } catch (NumberFormatException ex) {
-                            // Si l'utilisateur entre une valeur invalide, ignorer ou afficher un message d'erreur
-                            champsTexte[ligne][colonne].setText("");
-                        }
-                    }
-                }
-            }
-
-            // Résolution par Déduction
-            Deduction deduction = new Deduction(grille.getGrilleValeurs());
-            if (deduction.resoudreSudoku()) {
-                afficherGrilleGraphique(deduction.getGrilleResolue());
-            } else {
-                JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue par déduction.");
-            }
-        });
+        boutonBacktracking.addActionListener(e -> lancerResolution(new Backtracking(grille.getGrilleValeurs())));
+        boutonDeduction.addActionListener(e -> lancerResolution(new Deduction(grille.getGrilleValeurs())));
+        boutonCombiné.addActionListener(e -> lancerResolutionCombine());
 
         panneauBoutons.add(boutonBacktracking);
         panneauBoutons.add(boutonDeduction);
+        panneauBoutons.add(boutonCombiné);
 
-        // Ajouter les composants à la fenêtre principale
         panneauPrincipal.add(panneauGrille, BorderLayout.CENTER);
         panneauPrincipal.add(panneauBoutons, BorderLayout.SOUTH);
         add(panneauPrincipal);
 
-        // Agrandir la taille de la fenêtre
         setSize(800, 800);
         setLocationRelativeTo(null);
     }
 
     public void validerEntree(JTextField champ, int ligne, int colonne) {
         String entree = champ.getText().trim();
-        if (!entree.isEmpty()) {
-            try {
-                int valeur = Integer.parseInt(entree);
-                grille.validerEntree(ligne, colonne, valeur);
-                champ.setForeground(Color.BLUE);
-            } catch (NumberFormatException ex) {
-                champ.setText("");
-                JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre valide.");
+    
+         if (entree.isEmpty()) {
+            return;
+        }
+    
+        try {
+            int valeur = Integer.parseInt(entree);
+    
+            // Vérifier que la valeur est dans l'intervalle valide
+            if (valeur < 1 || valeur > taille) {
+                throw new IllegalArgumentException("Valeur invalide. Elle doit être comprise entre 1 et " + taille);
             }
+    
+            grille.validerEntree(ligne, colonne, valeur);
+            champ.setForeground(Color.BLUE);
+        } catch (NumberFormatException e) {
+            champ.setText(""); // Efface la valeur erronée
+            JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre entre 1 et " + taille, "Erreur", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            champ.setText(""); // Efface la valeur erronée
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void lancerResolution(Backtracking backtracking) {
+        recupererValeursInterface();
+        if (backtracking.resoudreSudoku()) {
+            afficherGrilleGraphique(backtracking.getGrilleResolue());
         } else {
-            grille.validerEntree(ligne, colonne, 0);
+            JOptionPane.showMessageDialog(this, "La grille n'est pas résolvable !");
+        }
+    }
+
+    public void lancerResolution(Deduction deduction) {
+        recupererValeursInterface();
+        if (deduction.resoudreSudoku()) {
+            afficherGrilleGraphique(deduction.getGrilleResolue());
+        } else {
+            JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue par déduction.");
+        }
+    }
+
+    public void lancerResolutionCombine() {
+        recupererValeursInterface();
+        ResolveurCombine solveur = new ResolveurCombine(grille.getGrilleValeurs());
+
+        if (solveur.resoudreSudoku()) {
+            afficherGrilleGraphique(solveur.getGrilleResolue());  // Affiche directement la grille
+        } else {
+            JOptionPane.showMessageDialog(this, "La grille n'a pas pu être résolue.");
+        }
+    }
+
+    public void recupererValeursInterface() {
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                String texte = champsTexte[ligne][colonne].getText().trim();
+                if (!texte.isEmpty()) {
+                    try {
+                        int valeur = Integer.parseInt(texte);
+                        grille.validerEntree(ligne, colonne, valeur);
+                    } catch (NumberFormatException ex) {
+                        champsTexte[ligne][colonne].setText("");
+                    }
+                }
+            }
         }
     }
 
     public void afficherGrilleGraphique(int[][] grilleResolue) {
-        // Fenêtre pour afficher la grille résolue
-        JFrame fenetreSolution = new JFrame("Grille Sudoku Résolue");
-        fenetreSolution.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        JPanel panneauGrille = new JPanel(new GridLayout(taille, taille));
-
-        Color[] couleursBlocs = {
-            new Color(173, 216, 230), // Bleu clair
-            new Color(255, 228, 225), // Rose clair
-            new Color(255, 255, 224), // Jaune pâle
-            new Color(144, 238, 144), // Vert pâle
-            new Color(255, 182, 193), // Rose pâle
-            new Color(240, 248, 255), // Bleu pâle
-            new Color(255, 250, 205), // Jaune très pâle
-            new Color(221, 160, 221)  // Lavande clair
-        };
-
         for (int ligne = 0; ligne < taille; ligne++) {
             for (int colonne = 0; colonne < taille; colonne++) {
-                JTextField champ = new JTextField(String.valueOf(grilleResolue[ligne][colonne]));
-                champ.setHorizontalAlignment(JTextField.CENTER);
-                champ.setFont(new Font("Arial", Font.BOLD, 20));
-                champ.setEditable(false);
-
-                int blocLigne = ligne / tailleBloc;
-                int blocColonne = colonne / tailleBloc;
-                int indexBloc = blocLigne * tailleBloc + blocColonne;
-
-                champ.setBackground(couleursBlocs[indexBloc % couleursBlocs.length]);
-
-                panneauGrille.add(champ);
+                champsTexte[ligne][colonne].setText(String.valueOf(grilleResolue[ligne][colonne]));
+                champsTexte[ligne][colonne].setForeground(Color.BLACK);
             }
         }
-
-        fenetreSolution.add(panneauGrille);
-        fenetreSolution.setSize(800, 800);
-        fenetreSolution.setLocationRelativeTo(null);
-        fenetreSolution.setVisible(true);
     }
 
     public void initialiserGrille() {

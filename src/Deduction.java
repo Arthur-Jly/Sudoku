@@ -1,8 +1,8 @@
+import java.util.HashSet;
+import java.util.Set;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Deduction {
     private final int taille;
@@ -10,22 +10,19 @@ public class Deduction {
     private int[][] grille;
     private final int[][] grilleOriginale;
     private Set<Integer>[][] possibilites;
-    private DeductionRuleManager ruleManager;
     private PrintWriter logWriter;
 
-    // Constructeur original (pour la compatibilité)
     public Deduction(int[][] grilleInitiale) {
-        this(grilleInitiale, new DeductionRuleManager()); // Utilise les règles par défaut
-    }
-
-    // Nouveau constructeur avec règles personnalisées
-    public Deduction(int[][] grilleInitiale, DeductionRuleManager ruleManager) {
         this.taille = grilleInitiale.length;
         this.tailleBloc = (int) Math.sqrt(taille);
         this.grilleOriginale = new int[taille][taille];
         this.grille = new int[taille][taille];
         this.possibilites = new HashSet[taille][taille];
-        this.ruleManager = ruleManager;
+        try {
+            Logger.init(); // Initialise le logger sans avoir à spécifier le fichier de log
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'initialisation du Logger : " + e.getMessage());
+        }
 
         // Effacer le contenu du fichier avant de commencer à écrire
         try (PrintWriter writer = new PrintWriter(new FileWriter("deduction_log.txt"))) {
@@ -57,6 +54,11 @@ public class Deduction {
         miseAJourInitiale();
     }
 
+    // Méthode pour loguer des messages
+    protected void log(String message) {
+        Logger.log(message);
+    }
+
     // Méthode pour loguer la grille actuelle
     private void logGrille() {
         if (logWriter != null) {
@@ -72,6 +74,9 @@ public class Deduction {
         }
     }
 
+    /**
+     * Met à jour les possibilités initiales de la grille.
+     */
     private void miseAJourInitiale() {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
@@ -82,18 +87,88 @@ public class Deduction {
         }
     }
 
+    /**
+     * Vérifie si une valeur peut être placée à une position donnée.
+     */
+    private boolean estValide(int ligne, int colonne, int valeur) {
+        for (int j = 0; j < taille; j++) {
+            if (grille[ligne][j] == valeur) return false;
+        }
+        for (int i = 0; i < taille; i++) {
+            if (grille[i][colonne] == valeur) return false;
+        }
+        int debutBloc_i = (ligne / tailleBloc) * tailleBloc;
+        int debutBloc_j = (colonne / tailleBloc) * tailleBloc;
+        for (int i = debutBloc_i; i < debutBloc_i + tailleBloc; i++) {
+            for (int j = debutBloc_j; j < debutBloc_j + tailleBloc; j++) {
+                if (grille[i][j] == valeur) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Résout le Sudoku en utilisant la déduction.
+     */
+    public boolean resoudreSudoku() {
+        log("Début de la résolution par déduction...");
+        if (resoudreParDeduction()) {
+            afficherGrille();
+            log("Grille résolue par déduction !");
+            return true;
+        } else {
+            log("La méthode de déduction ne suffit pas.");
+            return false;
+        }
+    }
+
+    /**
+     * Applique la méthode de déduction jusqu'à ce qu'aucun changement ne soit fait.
+     */
+    private boolean resoudreParDeduction() {
+        boolean modification = true;
+
+        while (modification) {
+            modification = false;
+
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                    if (grille[i][j] == 0) {
+                        if (possibilites[i][j].size() == 1) {
+                            int valeur = possibilites[i][j].iterator().next();
+                            grille[i][j] = valeur;
+                            miseAJourPossibilites(i, j, valeur);
+                            modification = true;
+                            log("Placement de la valeur " + valeur + " en position (" + i + ", " + j + ")");
+                            logGrille();
+                        } else {
+                            Integer valeurUnique = trouverValeurUnique(i, j);
+                            if (valeurUnique != null) {
+                                grille[i][j] = valeurUnique;
+                                miseAJourPossibilites(i, j, valeurUnique);
+                                modification = true;
+                                log("Placement de la valeur unique " + valeurUnique + " en position (" + i + ", " + j + ")");
+                                logGrille();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return estComplet();
+    }
+
+    /**
+     * Met à jour les possibilités après avoir placé une valeur.
+     */
     private void miseAJourPossibilites(int ligne, int colonne, int valeur) {
-        // Mettre à jour la ligne
         for (int j = 0; j < taille; j++) {
             possibilites[ligne][j].remove(valeur);
         }
-
-        // Mettre à jour la colonne
         for (int i = 0; i < taille; i++) {
             possibilites[i][colonne].remove(valeur);
         }
-
-        // Mettre à jour le bloc
         int debutBloc_i = (ligne / tailleBloc) * tailleBloc;
         int debutBloc_j = (colonne / tailleBloc) * tailleBloc;
         for (int i = debutBloc_i; i < debutBloc_i + tailleBloc; i++) {
@@ -103,78 +178,38 @@ public class Deduction {
         }
     }
 
-    private boolean estValide(int ligne, int colonne, int valeur) {
-        // Vérifier la ligne
+    /**
+     * Trouve une valeur unique pour une case dans la ligne, colonne ou bloc.
+     */
+    private Integer trouverValeurUnique(int ligne, int colonne) {
+        for (int valeur : possibilites[ligne][colonne]) {
+            if (estValeurUnique(ligne, colonne, valeur)) {
+                return valeur;
+            }
+        }
+        return null;
+    }
+
+    private boolean estValeurUnique(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
-            if (grille[ligne][j] == valeur) return false;
+            if (j != colonne && possibilites[ligne][j].contains(valeur)) return false;
         }
-
-        // Vérifier la colonne
         for (int i = 0; i < taille; i++) {
-            if (grille[i][colonne] == valeur) return false;
+            if (i != ligne && possibilites[i][colonne].contains(valeur)) return false;
         }
-
-        // Vérifier le bloc
         int debutBloc_i = (ligne / tailleBloc) * tailleBloc;
         int debutBloc_j = (colonne / tailleBloc) * tailleBloc;
         for (int i = debutBloc_i; i < debutBloc_i + tailleBloc; i++) {
             for (int j = debutBloc_j; j < debutBloc_j + tailleBloc; j++) {
-                if (grille[i][j] == valeur) return false;
+                if ((i != ligne || j != colonne) && possibilites[i][j].contains(valeur)) return false;
             }
         }
-
         return true;
     }
 
-    public boolean resoudreSudoku() {
-        if (resoudreParDeduction()) {
-            return true;
-        } else {
-            System.out.println("La méthode de déduction ne suffit pas.");
-            return false;
-        }
-    }
-
-    private boolean resoudreParDeduction() {
-        boolean modification = true;
-        boolean resolved = false;
-
-        while (modification && !resolved) {
-            modification = false;
-
-            // Applique toutes les règles actives
-            modification = ruleManager.appliquerRegles(grille, possibilites);
-
-            // Si une modification a été faite, met à jour les possibilités
-            if (modification) {
-                miseAJourPossibilites();
-                logGrille(); // Loguer la grille après chaque modification
-            }
-
-            resolved = estComplet();
-        }
-
-        return resolved;
-    }
-
-    private void miseAJourPossibilites() {
-        // Réinitialiser toutes les possibilités
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                if (grille[i][j] == 0) {
-                    possibilites[i][j].clear();
-                    for (int num = 1; num <= taille; num++) {
-                        if (estValide(i, j, num)) {
-                            possibilites[i][j].add(num);
-                        }
-                    }
-                } else {
-                    possibilites[i][j].clear();
-                }
-            }
-        }
-    }
-
+    /**
+     * Vérifie si la grille est complète.
+     */
     private boolean estComplet() {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
@@ -184,23 +219,30 @@ public class Deduction {
         return true;
     }
 
-    public int[][] getGrilleResolue() {
-        return grille;
-    }
-
-    public void afficherGrille() {
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                System.out.print(grille[i][j] + " ");
+    /**
+     * Affiche la grille actuelle.
+     */
+    private void afficherGrille() {
+        for (int[] ligne : grille) {
+            for (int val : ligne) {
+                System.out.print(val + " ");
             }
             System.out.println();
         }
     }
 
-    // Fermer le logWriter à la fin
+    public int[][] getGrilleResolue() {
+        return grille;
+    }
+
     public void closeLogger() {
-        if (logWriter != null) {
-            logWriter.close();
+        try {
+            Logger.close();
+            if (logWriter != null) {
+                logWriter.close();
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la fermeture du logger: " + e.getMessage());
         }
     }
 }

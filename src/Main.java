@@ -77,31 +77,6 @@ public class Main {
                 modeTexte.demarrerJeu();
             }
 
-            // Demander à l'utilisateur de sélectionner les règles de déduction
-            DeductionRuleManager ruleManager = new DeductionRuleManager();
-            Set<DeductionRuleType> reglesDisponibles = EnumSet.allOf(DeductionRuleType.class);
-            for (DeductionRuleType regle : reglesDisponibles) {
-                int choix = JOptionPane.showConfirmDialog(
-                        null,
-                        "Voulez-vous activer la règle : " + regle,
-                        "Sélection des règles de déduction",
-                        JOptionPane.YES_NO_OPTION
-                );
-                if (choix == JOptionPane.YES_OPTION) {
-                    ruleManager.activerRegle(regle);
-                } else {
-                    ruleManager.desactiverRegle(regle);
-                }
-            }
-
-            // Utiliser les règles sélectionnées pour la déduction
-            Deduction deduction = new Deduction(grille.getGrilleValeurs(), ruleManager);
-            if (deduction.resoudreSudoku()) {
-                deduction.afficherGrille();
-            } else {
-                System.out.println("Aucune solution trouvée avec les règles sélectionnées.");
-            }
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(
                     null,

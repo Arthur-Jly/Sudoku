@@ -50,10 +50,10 @@ public class Main {
             }
 
             // Demander à l'utilisateur quel type de jeu il préfère
-            String[] jeuxOptions = {"Sudoku", "Multidoku"};
+            String[] jeuxOptions = {"Sudoku", "Multidoku", "Générer une grille"};
             int choixJeu = JOptionPane.showOptionDialog(
                     null,
-                    "Choisissez le type de jeu :",
+                    "Choisissez une option :",
                     "Type de jeu",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
@@ -62,7 +62,15 @@ public class Main {
                     jeuxOptions[0]
             );
 
-            // Créer l'objet grille en fonction du choix de l'utilisateur
+            // Cas où l'utilisateur choisit "Générer une grille"
+            if (choixJeu == 2) {
+                Grille grille = new Grille(taille);
+                SudokuGenerator generator = new SudokuGenerator(grille);
+                generator.initialiserGrille();
+                return; // On termine ici pour ne pas aller plus loin
+            }
+
+            // Création de la grille selon le choix de l'utilisateur
             Grille grille;
             if (choixJeu == 0) {
                 grille = new Grille(taille); // Si l'utilisateur choisit Sudoku
@@ -74,7 +82,7 @@ public class Main {
             String[] modesOptions = {"Graphique", "Texte"};
             int choixMode = JOptionPane.showOptionDialog(
                     null,
-                    "Choisissez le mode d'affchage :",
+                    "Choisissez le mode d'affichage :",
                     "Mode de jeu",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
@@ -85,13 +93,22 @@ public class Main {
 
             // Mode graphique
             if (choixMode == 0) {
+                JFrame frame = new JFrame("Jeu de Sudoku ou Multidoku");
+                frame.setSize(800, 800);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLocationRelativeTo(null);
+
                 if (choixJeu == 0) {
                     SudokuModeGraphique modeGraphique = new SudokuModeGraphique(grille);
                     modeGraphique.initialiserGrille();
+                    frame.add(modeGraphique);
                 } else {
                     MultidokuModeGraphique modeGraphique = new MultidokuModeGraphique(grille);
                     modeGraphique.initialiserGrille();
+                    frame.add(modeGraphique);
                 }
+
+                frame.setVisible(true);
             }
             // Mode texte
             else if (choixMode == 1) {
@@ -114,11 +131,11 @@ public class Main {
             main(args); // Relance la demande
         } finally {
             // N'oubliez pas d'appeler la méthode closeLogger à la fin de votre programme pour fermer correctement le PrintWriter.
-            Backtracking backtracking = new Backtracking(new int[0][0]); // Utilisez une grille vide pour accéder à closeLogger
+            Backtracking backtracking = new Backtracking(new int[0][0]); // Utilisation d'une grille vide pour accéder à closeLogger
             backtracking.closeLogger();
 
             // Fermer le logger de Deduction
-            Deduction deduction = new Deduction(new int[0][0]); // Utilisez une grille vide pour accéder à closeLogger
+            Deduction deduction = new Deduction(new int[0][0]); // Utilisation d'une grille vide pour accéder à closeLogger
             deduction.closeLogger();
         }
     }

@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * Classe représentant le mode graphique pour le Multidoku.
+ */
 public class MultidokuModeGraphique extends SudokuModeGraphique {
     public JButton[][] boutonsBlocs;
     public int[][] blocs;
@@ -28,7 +31,11 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     private JButton boutonResolutionBacktracking;
     private JButton boutonResolutionCombine;
 
-
+    /**
+     * Constructeur de la classe MultidokuModeGraphique.
+     *
+     * @param grille La grille de Multidoku.
+     */
     public MultidokuModeGraphique(Grille grille) {
         super(grille);
         this.blocs = new int[grille.getTaille()][grille.getTaille()];
@@ -36,6 +43,9 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         configurerBlocs();
     }
 
+    /**
+     * Configure les blocs de la grille.
+     */
     private void configurerBlocs() {
         panneauGrille = new JPanel(new GridLayout(grille.getTaille(), grille.getTaille(), 1, 1));
         panneauGrille.setBorder(BorderFactory.createTitledBorder("Définir les blocs"));
@@ -174,6 +184,15 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     }
 
 
+
+
+    /**
+     * Compte le nombre de cases dans un bloc donné.
+     *
+     * @param bloc Le numéro du bloc.
+     * @return Le nombre de cases dans le bloc.
+     */
+
     private int compterCasesBloc(int bloc) {
         int count = 0;
         for (int[] ligne : blocs) {
@@ -187,6 +206,14 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     }
 
 
+
+
+
+    /**
+     * Vérifie si tous les blocs sont définis.
+     *
+     * @return true si tous les blocs sont définis, false sinon.
+     */
     public boolean tousBlocksDefinis() {
 
         for (int[] ligne : blocs) {
@@ -199,7 +226,14 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
+
+    /**
+     * Vérifie si la grille de Multidoku est valide.
+     *
+     * @return true si la grille est valide, false sinon.
+     */
     public boolean verifierMultidoku() {
+
         for (int i = 0; i < grille.getTaille(); i++) {
             if (!verifierLigne(i) || !verifierColonne(i)) {
                 JOptionPane.showMessageDialog(this, "Erreur : Les nombres ne respectent pas les règles du Sudoku", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -217,7 +251,15 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
+
+    /**
+     * Vérifie si une ligne est valide.
+     *
+     * @param ligne La ligne à vérifier.
+     * @return true si la ligne est valide, false sinon.
+     */
     public boolean verifierLigne(int ligne) {
+
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int col = 0; col < grille.getTaille(); col++) {
             String valeur = champsTexte[ligne][col].getText().trim();
@@ -232,7 +274,15 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
+
+    /**
+     * Vérifie si une colonne est valide.
+     *
+     * @param colonne La colonne à vérifier.
+     * @return true si la colonne est valide, false sinon.
+     */
     public boolean verifierColonne(int colonne) {
+
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int lig = 0; lig < grille.getTaille(); lig++) {
             String valeur = champsTexte[lig][colonne].getText().trim();
@@ -247,7 +297,14 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
+    /**
+     * Vérifie si un bloc est valide.
+     *
+     * @param numBloc Le numéro du bloc à vérifier.
+     * @return true si le bloc est valide, false sinon.
+     */
     public boolean verifierBloc(int numBloc) {
+
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int ligne = 0; ligne < grille.getTaille(); ligne++) {
             for (int colonne = 0; colonne < grille.getTaille(); colonne++) {
@@ -266,6 +323,9 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
+    /**
+     * Active la saisie des valeurs dans la grille.
+     */
     private void activerSaisieValeurs() {
         panneauGrille.removeAll();
         
@@ -287,7 +347,14 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         panneauGrille.repaint();
     }
 
-   @Override
+    /**
+     * Valide l'entrée de l'utilisateur dans un champ de texte.
+     *
+     * @param champ   Le champ de texte.
+     * @param ligne   La ligne de la case.
+     * @param colonne La colonne de la case.
+     */
+    @Override
     public void validerEntree(JTextField champ, int ligne, int colonne) {
         if (!modeDefinitionBlocs) {
             String entree = champ.getText().trim();
@@ -323,10 +390,13 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         }
     }
 
-
-
+    /**
+     * Affiche la grille résolue graphiquement.
+     *
+     * @param grilleResolue La grille résolue.
+     * @param blocs         Les blocs de la grille.
+     */
     public void afficher_GrilleGraphique(int[][] grilleResolue, int[][] blocs) {
-        // Fenêtre pour afficher la grille résolue
         JFrame fenetreSolution = new JFrame("Grille MultiDoku Résolue");
         fenetreSolution.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JPanel panneauGrille = new JPanel(new GridLayout(grille.getTaille(), grille.getTaille()));
@@ -337,7 +407,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
                 champ.setFont(new Font("Arial", Font.BOLD, 20));
                 champ.setEditable(false);
 
-                // Récupération de l'identifiant du bloc à partir du tableau des blocs
                 int indexBloc = blocs[ligne][colonne];
                 champ.setBackground(couleursBlocs[indexBloc % couleursBlocs.length]);
 
@@ -351,6 +420,12 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         fenetreSolution.setVisible(true);
     }
 
+    /**
+     * Affiche la grille dans la console.
+     *
+     * @param grille La grille à afficher.
+     * @param taille La taille de la grille.
+     */
     private void afficherGrille(int[][] grille, int taille) {
         int tailleBloc = (int) Math.sqrt(taille);
         System.out.println("-".repeat(taille * 2 + tailleBloc));

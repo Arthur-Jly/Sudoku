@@ -1,3 +1,6 @@
+/**
+ * Classe implémentant une combinaison de déduction et de backtracking pour résoudre les grilles de Sudoku.
+ */
 public class ResolveurCombine {
     private final int taille;
     private final int tailleBloc;
@@ -6,6 +9,11 @@ public class ResolveurCombine {
     private final Deduction deduction;
     private final Backtracking backtracking;
 
+    /**
+     * Constructeur de la classe ResolveurCombine.
+     *
+     * @param grilleInitiale La grille initiale à résoudre.
+     */
     public ResolveurCombine(int[][] grilleInitiale) {
         this.taille = grilleInitiale.length;
         this.tailleBloc = (int) Math.sqrt(taille);
@@ -25,6 +33,11 @@ public class ResolveurCombine {
         this.backtracking = new Backtracking(grilleInitiale);
     }
 
+    /**
+     * Résout la grille de Sudoku en utilisant une combinaison de déduction et de backtracking.
+     *
+     * @return true si la grille est résolue, false sinon.
+     */
     public boolean resoudreSudoku() {
         System.out.println("\nTentative de résolution par déduction...");
 
@@ -51,6 +64,11 @@ public class ResolveurCombine {
         return false;
     }
 
+    /**
+     * Retourne la grille résolue.
+     *
+     * @return La grille résolue.
+     */
     public int[][] getGrilleResolue() {
         return grille;
     }

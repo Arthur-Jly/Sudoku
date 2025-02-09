@@ -1,10 +1,18 @@
 import java.util.Arrays;
 import javax.swing.*;
 
+/**
+ * Classe principale pour démarrer l'application Sudoku.
+ */
 public class Main {
     // Liste des tailles valides (carrés parfaits jusqu'à 16)
     private static final int[] TAILLES_VALIDES = {4, 9, 16};
 
+    /**
+     * Méthode principale pour démarrer l'application.
+     *
+     * @param args Les arguments de la ligne de commande.
+     */
     public static void main(String[] args) {
         // Prépare le message avec les tailles valides
         String taillesValides = Arrays.toString(TAILLES_VALIDES)
@@ -64,7 +72,7 @@ public class Main {
             // Cas où l'utilisateur choisit "Générer une grille"
             if (choixJeu == 2) {
                 Grille grille = new Grille(taille);
-                SudokuGenerator generator = new SudokuGenerator(grille);
+                SudokuGeneratorGraphique generator = new SudokuGeneratorGraphique(grille);
                 generator.initialiserGrille();
                 return; // On termine ici pour ne pas aller plus loin
             }
@@ -140,7 +148,10 @@ public class Main {
     }
 
     /**
-     * Vérifie si la taille donnée est valide (présente dans TAILLES_VALIDES)
+     * Vérifie si la taille donnée est valide (présente dans TAILLES_VALIDES).
+     *
+     * @param taille La taille à vérifier.
+     * @return true si la taille est valide, false sinon.
      */
     private static boolean estTailleValide(int taille) {
         return Arrays.stream(TAILLES_VALIDES)

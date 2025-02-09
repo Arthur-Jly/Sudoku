@@ -1,15 +1,26 @@
 import java.util.Scanner;
 
+/**
+ * Classe représentant le mode texte pour le Multidoku.
+ */
 public class MultidokuModeTexte extends SudokuModeTexte {
     private int[][] blocs;
     private int taille;
 
+    /**
+     * Constructeur de la classe MultidokuModeTexte.
+     *
+     * @param grille La grille de Multidoku.
+     */
     public MultidokuModeTexte(Grille grille) {
         super(grille);
         this.taille = grille.getGrilleValeurs().length;
         this.blocs = new int[taille][taille];
     }
 
+    /**
+     * Démarre le jeu en mode texte.
+     */
     @Override
     public void demarrerJeu() {
         Scanner scanner = new Scanner(System.in);
@@ -88,6 +99,11 @@ public class MultidokuModeTexte extends SudokuModeTexte {
         scanner.close();
     }
 
+    /**
+     * Définit les blocs de la grille.
+     *
+     * @param scanner Le scanner pour lire les entrées de l'utilisateur.
+     */
     private void definirBlocs(Scanner scanner) {
         System.out.println("Pour chaque position, entrez le numéro du bloc (1-" + taille + ")");
         
@@ -139,7 +155,11 @@ public class MultidokuModeTexte extends SudokuModeTexte {
         afficherGrilleBlocs();
     }
 
-    // Méthode pour vérifier si les blocs sont valides
+    /**
+     * Vérifie si les blocs définis sont valides.
+     *
+     * @return true si les blocs sont valides, false sinon.
+     */
     private boolean verifierBlocsValides() {
         int[] compteBlocs = new int[taille + 1];
         for (int i = 0; i < taille; i++) {
@@ -162,6 +182,9 @@ public class MultidokuModeTexte extends SudokuModeTexte {
         return true; 
     }
 
+    /**
+     * Affiche la grille des blocs.
+     */
     private void afficherGrilleBlocs() {
         System.out.println("\nGrille des blocs:");
         int tailleBloc = (int) Math.sqrt(taille);
@@ -185,6 +208,12 @@ public class MultidokuModeTexte extends SudokuModeTexte {
         System.out.println(ligneSeparatrice);
     }
 
+    /**
+     * Affiche la grille actuelle avec les blocs.
+     *
+     * @param grille La grille à afficher.
+     * @param taille La taille de la grille.
+     */
     protected void afficherGrille(int[][] grille, int taille) {
         System.out.println("\nGrille actuelle (format: valeur(bloc)):");
 

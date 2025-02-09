@@ -1,15 +1,28 @@
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Classe gérant les règles de déduction pour la résolution de Sudoku.
+ */
 public class DeductionRuleManager {
     private Set<DeductionRuleType> reglesActives;
 
+    /**
+     * Constructeur de la classe DeductionRuleManager.
+     * Par défaut, active uniquement la règle SINGLE_CANDIDATE.
+     */
     public DeductionRuleManager() {
         this.reglesActives = new HashSet<>();
-        // Par défaut, on active uniquement la règle SINGLE_CANDIDATE
         reglesActives.add(DeductionRuleType.SINGLE_CANDIDATE);
     }
 
+    /**
+     * Applique les règles de déduction actives sur la grille.
+     *
+     * @param grille        La grille de Sudoku.
+     * @param possibilites  Les possibilités pour chaque case.
+     * @return true si une modification a été effectuée, false sinon.
+     */
     public boolean appliquerRegles(int[][] grille, Set<Integer>[][] possibilites) {
         boolean modification = false;
 
@@ -21,6 +34,13 @@ public class DeductionRuleManager {
         return modification;
     }
 
+    /**
+     * Applique la règle du candidat unique sur la grille.
+     *
+     * @param grille        La grille de Sudoku.
+     * @param possibilites  Les possibilités pour chaque case.
+     * @return true si une modification a été effectuée, false sinon.
+     */
     private boolean appliquerCandidatUnique(int[][] grille, Set<Integer>[][] possibilites) {
         boolean modification = false;
 
@@ -38,6 +58,15 @@ public class DeductionRuleManager {
         return modification;
     }
 
+    /**
+     * Met à jour les possibilités après avoir placé une valeur.
+     *
+     * @param grille        La grille de Sudoku.
+     * @param possibilites  Les possibilités pour chaque case.
+     * @param ligne         La ligne de la case.
+     * @param colonne       La colonne de la case.
+     * @param valeur        La valeur placée.
+     */
     private void miseAJourPossibilites(int[][] grille, Set<Integer>[][] possibilites, int ligne, int colonne, int valeur) {
         int taille = grille.length;
         int tailleBloc = (int) Math.sqrt(taille);
@@ -62,14 +91,29 @@ public class DeductionRuleManager {
         }
     }
 
+    /**
+     * Active une règle de déduction.
+     *
+     * @param regle La règle à activer.
+     */
     public void activerRegle(DeductionRuleType regle) {
         reglesActives.add(regle);
     }
 
+    /**
+     * Désactive une règle de déduction.
+     *
+     * @param regle La règle à désactiver.
+     */
     public void desactiverRegle(DeductionRuleType regle) {
         reglesActives.remove(regle);
     }
 
+    /**
+     * Retourne les règles de déduction actives.
+     *
+     * @return Un ensemble des règles de déduction actives.
+     */
     public Set<DeductionRuleType> getReglesActives() {
         return reglesActives;
     }

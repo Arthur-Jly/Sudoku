@@ -54,14 +54,18 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
 
                 final int l = ligne;
                 final int c = colonne;
-                
+
                 boutonBloc.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (modeDefinitionBlocs) {
                             if (blocs[l][c] == 0) {
-                                blocs[l][c] = blocActuel;
-                                boutonBloc.setBackground(couleursBlocs[blocActuel - 1]);
+                                if (compterCasesBloc(blocActuel) < grille.getTaille()) {
+                                    blocs[l][c] = blocActuel;
+                                    boutonBloc.setBackground(couleursBlocs[blocActuel - 1]);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Le bloc " + blocActuel + " est déjà complet.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                                }
                             } else {
                                 blocs[l][c] = 0;
                                 boutonBloc.setBackground(Color.WHITE);
@@ -151,11 +155,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
                 afficher_GrilleGraphique(resolveur.getGrilleResolue(), blocs);
             }
         });
-        
-
-        
-
-
 
         JPanel panneauPrincipal = (JPanel) getContentPane().getComponent(0);
         panneauPrincipal.add(panneauGrille, BorderLayout.CENTER);
@@ -172,6 +171,18 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         revalidate();
         repaint();
         setSize(1200, 800);
+    }
+
+    private int compterCasesBloc(int bloc) {
+        int count = 0;
+        for (int[] ligne : blocs) {
+            for (int b : ligne) {
+                if (b == bloc) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     private boolean tousBlocksDefinis() {
@@ -274,40 +285,40 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
     }
 
    @Override
-public void validerEntree(JTextField champ, int ligne, int colonne) {
-    if (!modeDefinitionBlocs) {
-        String entree = champ.getText().trim();
+    public void validerEntree(JTextField champ, int ligne, int colonne) {
+        if (!modeDefinitionBlocs) {
+            String entree = champ.getText().trim();
 
-        if (entree.isEmpty()) {
-            return;
-        }
-
-        try {
-            int valeur = Integer.parseInt(entree);
-
-            // Vérifier que la valeur est valide
-            if (valeur < 1 || valeur > grille.getTaille()) {
-                throw new IllegalArgumentException("Valeur invalide. Elle doit être comprise entre 1 et " + grille.getTaille());
-            }
-
-            // Vérifier si le bloc a bien été défini avant de valider l'entrée
-            if (blocs[ligne][colonne] == 0) {
-                JOptionPane.showMessageDialog(this, "Définissez les blocs avant de saisir des nombres.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                champ.setText(""); // Efface la valeur erronée
+            if (entree.isEmpty()) {
                 return;
             }
 
-            grille.validerEntree(ligne, colonne, valeur);
-            champ.setForeground(Color.BLUE);
-        } catch (NumberFormatException e) {
-            champ.setText(""); // Efface la valeur erronée
-            JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre entre 1 et " + grille.getTaille(), "Erreur", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalArgumentException e) {
-            champ.setText(""); // Efface la valeur erronée si elle est invalide
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            try {
+                int valeur = Integer.parseInt(entree);
+
+                // Vérifier que la valeur est valide
+                if (valeur < 1 || valeur > grille.getTaille()) {
+                    throw new IllegalArgumentException("Valeur invalide. Elle doit être comprise entre 1 et " + grille.getTaille());
+                }
+
+                // Vérifier si le bloc a bien été défini avant de valider l'entrée
+                if (blocs[ligne][colonne] == 0) {
+                    JOptionPane.showMessageDialog(this, "Définissez les blocs avant de saisir des nombres.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    champ.setText(""); // Efface la valeur erronée
+                    return;
+                }
+
+                grille.validerEntree(ligne, colonne, valeur);
+                champ.setForeground(Color.BLUE);
+            } catch (NumberFormatException e) {
+                champ.setText(""); // Efface la valeur erronée
+                JOptionPane.showMessageDialog(this, "Veuillez entrer un nombre entre 1 et " + grille.getTaille(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException e) {
+                champ.setText(""); // Efface la valeur erronée si elle est invalide
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
-}
 
 
 

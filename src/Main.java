@@ -2,8 +2,8 @@ import java.util.Arrays;
 import javax.swing.*;
 
 public class Main {
-    // Liste des tailles valides (carrés parfaits jusqu'à 49)
-    private static final int[] TAILLES_VALIDES = {4, 9, 16, 25, 36, 49};
+    // Liste des tailles valides (carrés parfaits jusqu'à 16)
+    private static final int[] TAILLES_VALIDES = {4, 9, 16};
 
     public static void main(String[] args) {
         // Prépare le message avec les tailles valides
@@ -14,8 +14,7 @@ public class Main {
         // Demande la taille avec un message explicatif
         String message = String.format(
                 "<html>Entrez la taille de la grille<br>" +
-                        "Valeurs possibles : %s<br>" +
-                        "(carrés parfaits pour les blocs)</html>",
+                        "Valeurs possibles : %s</html>",
                 taillesValides
         );
 

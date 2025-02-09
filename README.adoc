@@ -54,6 +54,9 @@ Lancez le programme avec :
 java Main
 ----
 
+== Tests
+Nous avons fait des tests unitaires pour tester les principales methodes de nos programmes
+
 == Auteurs
 Ce projet a été développé par :
 - Arthur Joly

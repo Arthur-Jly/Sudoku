@@ -1,3 +1,4 @@
+package Class;
 /**
  * Classe représentant une grille de Sudoku.
  */

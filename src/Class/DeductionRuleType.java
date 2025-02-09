@@ -1,3 +1,4 @@
+package Class;
 public enum DeductionRuleType {
     SINGLE_CANDIDATE,
     UNIQUE_VALUE,

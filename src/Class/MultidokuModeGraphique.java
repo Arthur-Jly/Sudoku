@@ -1,6 +1,11 @@
+package Class;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import ResolveurCombine;
+import SudokuModeGraphique;
+
 import java.util.EnumSet;
 import java.util.Set;
 

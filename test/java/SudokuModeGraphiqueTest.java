@@ -1,4 +1,10 @@
 import org.junit.jupiter.api.*;
+
+import Class.Backtracking;
+import Class.Deduction;
+import Class.Grille;
+import Class.SudokuModeGraphique;
+
 import static org.junit.jupiter.api.Assertions.*;
 import javax.swing.*;
 import java.awt.Color;

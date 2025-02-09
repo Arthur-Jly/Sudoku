@@ -1,3 +1,4 @@
+package Class;
 /**
  * Classe implémentant l'algorithme de backtracking pour résoudre les grilles de Multidoku.
  */

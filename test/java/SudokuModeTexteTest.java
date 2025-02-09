@@ -1,5 +1,12 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import Class.Backtracking;
+import Class.Deduction;
+import Class.Grille;
+import Class.ResolveurCombine;
+import Class.SudokuModeTexte;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileWriter;

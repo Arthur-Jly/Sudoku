@@ -1,6 +1,6 @@
 = Solveur de Sudoku et Multidoku
 
-Ce projet est un solveur de Sudoku et Multidoku en ligne de commande ou affiche graphique. L'utilisateur peut choisir la taille de la grille, entrer les valeurs initiales et sélectionner le mode de résolution.
+Ce projet est un solveur de Sudoku et Multidoku en ligne de commande ou avec une interface graphique. L'utilisateur peut choisir la taille de la grille, entrer les valeurs initiales et sélectionner le mode de résolution.
 
 == Fonctionnalités
 - Choix de la taille de la grille
@@ -8,15 +8,23 @@ Ce projet est un solveur de Sudoku et Multidoku en ligne de commande ou affiche 
 - Mode Sudoku classique
 - Mode Multidoku (avec gestion des blocs personnalisés)
 - Différents algorithmes de résolution
+- Mode Génération de grille à partir d'une grille complète
 - Affichage de la grille résolue
 
 == Utilisation
-. **Choisir la taille de la grille**
-. **Sélectionner le type de jeu** : Sudoku ou Multidoku
+. **Choisir la taille de la grille** (4, 9 classique ou 16)
+. **Sélectionner le type de jeu** : Sudoku, Multidoku ou Génération
 . **Entrer les nombres** de la grille initiale
-. **Pour le Multidoku**, définir les blocs
+. **Pour le Multidoku**, définir les blocs (les blocs ne sont pas forcément carrés, l'utilisateur les définit lui-même)
 . **Choisir le mode de résolution**
 . **Récupérer la grille résolue**
+
+### Détails des modes
+- **Sudoku** : Mode classique où l'on entre les nombres et applique l'algorithme de résolution choisi.
+- **Multidoku** : On définit la taille des blocs, entre les nombres, puis sélectionne un algorithme de résolution.
+- **Génération** : L'utilisateur entre une grille complète et un niveau de difficulté, puis une grille est générée avec des cases en moins.
+
+Tous ces modes peuvent être utilisés en mode graphique ou textuel.
 
 == Installation
 
@@ -26,7 +34,7 @@ Ce projet est un solveur de Sudoku et Multidoku en ligne de commande ou affiche 
 git clone https://github.com/Arthur-Jly/Sudoku.git
 ----
 
-=== Puis mettez vous dans le bon répertoire
+=== Puis mettez-vous dans le bon répertoire
 [source,sh]
 ----
 cd Sudoku/src

@@ -102,22 +102,15 @@ public class Main {
 
             // Mode graphique
             if (choixMode == 0) {
-                JFrame frame = new JFrame("Jeu de Sudoku ou Multidoku");
-                frame.setSize(800, 800);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLocationRelativeTo(null);
-
                 if (choixJeu == 0) {
                     SudokuModeGraphique modeGraphique = new SudokuModeGraphique(grille);
                     modeGraphique.initialiserGrille();
-                    frame.add(modeGraphique);
+                    modeGraphique.setVisible(true);
                 } else {
                     MultidokuModeGraphique modeGraphique = new MultidokuModeGraphique(grille);
                     modeGraphique.initialiserGrille();
-                    frame.add(modeGraphique);
+                    modeGraphique.setVisible(true);
                 }
-
-                frame.setVisible(true);
             }
             // Mode texte
             else if (choixMode == 1) {

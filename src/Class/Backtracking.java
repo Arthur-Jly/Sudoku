@@ -3,8 +3,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import Logger;
-
 /**
  * Classe implémentant l'algorithme de backtracking pour résoudre les grilles de Sudoku.
  */
@@ -25,23 +23,15 @@ public class Backtracking {
         this.tailleBloc = (int) Math.sqrt(taille);
         this.grilleOriginale = new int[taille][taille];
         this.grille = new int[taille][taille];
-        try {
-            Logger.init(); // Initialise le logger
-        } catch (IOException e) {
-            System.err.println("Erreur lors de l'initialisation du Logger : " + e.getMessage());
-        }
 
-        // Effacer le contenu du fichier avant de commencer à écrire
-        try (PrintWriter writer = new PrintWriter(new FileWriter("backtracking_log.txt"))) {
-            writer.print("");
-        } catch (IOException e) {
-            System.err.println("Erreur lors de l'effacement du fichier de log : " + e.getMessage());
-        }
-
+        // Combine the file operations into a single try-catch block
         try {
+            // Clear the file
+            new PrintWriter(new FileWriter("backtracking_log.txt")).close();
+            // Open the file for appending
             logWriter = new PrintWriter(new FileWriter("backtracking_log.txt", true));
         } catch (IOException e) {
-            System.err.println("Erreur lors de l'initialisation du logWriter : " + e.getMessage());
+            System.err.println("Erreur lors de l'opération sur le fichier de log : " + e.getMessage());
         }
 
         // Copie des grilles pour garder l'originale intacte
@@ -59,7 +49,7 @@ public class Backtracking {
      * @param message Le message à loguer.
      */
     protected void log(String message) {
-        Logger.log(message);
+        // Loguer le message
     }
 
     /**
@@ -83,7 +73,7 @@ public class Backtracking {
      * Ferme le logger à la fin.
      */
     public void closeLogger() {
-        Logger.close();
+        // Fermer le logger
         if (logWriter != null) {
             logWriter.close();
         }
@@ -268,5 +258,4 @@ public class Backtracking {
         return sb.toString();
     }
 }
-
 

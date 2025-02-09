@@ -3,12 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import ResolveurCombine;
-import SudokuModeGraphique;
-
-import java.util.EnumSet;
-import java.util.Set;
-
 /**
  * Classe représentant le mode graphique pour le Multidoku.
  */
@@ -188,16 +182,12 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         setSize(1200, 800);
     }
 
-
-
-
     /**
      * Compte le nombre de cases dans un bloc donné.
      *
      * @param bloc Le numéro du bloc.
      * @return Le nombre de cases dans le bloc.
      */
-
     private int compterCasesBloc(int bloc) {
         int count = 0;
         for (int[] ligne : blocs) {
@@ -210,17 +200,12 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return count;
     }
 
-
-
-
-
     /**
      * Vérifie si tous les blocs sont définis.
      *
      * @return true si tous les blocs sont définis, false sinon.
      */
     public boolean tousBlocksDefinis() {
-
         for (int[] ligne : blocs) {
             for (int bloc : ligne) {
                 if (bloc == 0) {
@@ -231,14 +216,12 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-
     /**
      * Vérifie si la grille de Multidoku est valide.
      *
      * @return true si la grille est valide, false sinon.
      */
     public boolean verifierMultidoku() {
-
         for (int i = 0; i < grille.getTaille(); i++) {
             if (!verifierLigne(i) || !verifierColonne(i)) {
                 JOptionPane.showMessageDialog(this, "Erreur : Les nombres ne respectent pas les règles du Sudoku", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -256,7 +239,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-
     /**
      * Vérifie si une ligne est valide.
      *
@@ -264,7 +246,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
      * @return true si la ligne est valide, false sinon.
      */
     public boolean verifierLigne(int ligne) {
-
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int col = 0; col < grille.getTaille(); col++) {
             String valeur = champsTexte[ligne][col].getText().trim();
@@ -279,7 +260,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-
     /**
      * Vérifie si une colonne est valide.
      *
@@ -287,7 +267,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
      * @return true si la colonne est valide, false sinon.
      */
     public boolean verifierColonne(int colonne) {
-
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int lig = 0; lig < grille.getTaille(); lig++) {
             String valeur = champsTexte[lig][colonne].getText().trim();
@@ -309,7 +288,6 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
      * @return true si le bloc est valide, false sinon.
      */
     public boolean verifierBloc(int numBloc) {
-
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int ligne = 0; ligne < grille.getTaille(); ligne++) {
             for (int colonne = 0; colonne < grille.getTaille(); colonne++) {

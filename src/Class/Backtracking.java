@@ -1,6 +1,9 @@
+package Class;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import Logger;
 
 /**
  * Classe implémentant l'algorithme de backtracking pour résoudre les grilles de Sudoku.

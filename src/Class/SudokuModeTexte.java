@@ -1,3 +1,4 @@
+package Class;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -30,7 +31,7 @@ public class SudokuModeTexte {
 
         if (reponse.equalsIgnoreCase("oui")) {
             try {
-                File fichier = new File("grilleFile.txt");
+                File fichier = new File("../grilleFile.txt");
                 Scanner fichierScanner = new Scanner(fichier);
                 
                 // Lire la première ligne non commentée pour déterminer la taille

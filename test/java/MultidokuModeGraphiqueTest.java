@@ -1,4 +1,10 @@
 import org.junit.jupiter.api.Test;
+
+import Class.Deduction;
+import Class.Grille;
+import Class.MultidokuBacktracking;
+import Class.MultidokuModeGraphique;
+
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import javax.swing.*;

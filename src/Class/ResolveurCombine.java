@@ -1,3 +1,8 @@
+package Class;
+import Class.Deduction;
+
+import Class.Backtracking;
+
 /**
  * Classe implémentant une combinaison de déduction et de backtracking pour résoudre les grilles de Sudoku.
  */

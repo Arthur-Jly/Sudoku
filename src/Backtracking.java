@@ -149,7 +149,7 @@ public class Backtracking {
     /**
      * Algorithme de backtracking
      */
-    private boolean resoudre() {
+    public  boolean resoudre() {
         int[] position = new int[2];
 
         if (!trouverCaseVide(position)) {

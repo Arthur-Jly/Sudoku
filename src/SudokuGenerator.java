@@ -153,15 +153,72 @@ public class SudokuGenerator extends SudokuModeGraphique {
         JButton boutonBacktracking = new JButton("Backtracking");
         JButton boutonDeduction = new JButton("Déduction");
 
-        boutonBacktracking.addActionListener(e -> lancerResolution(new Backtracking(grille)));
-        boutonDeduction.addActionListener(e -> lancerResolution(new Deduction(grille)));
+        boutonBacktracking.addActionListener(e -> {
+            Backtracking backtracking = new Backtracking(grille);
+            if (backtracking.resoudreSudoku()) {
+                int[][] grilleResolue = backtracking.getGrilleResolue();
+                afficherGrilleGraphique(grilleResolue);
+            } else {
+                JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        boutonDeduction.addActionListener(e -> {
+            Deduction deduction = new Deduction(grille);
+            if (deduction.resoudreSudoku()) {
+                int[][] grilleResolue = deduction.getGrilleResolue();
+                afficherGrilleGraphique(grilleResolue);
+            } else {
+                JOptionPane.showMessageDialog(this, "La grille ne peut pas être résolue", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         panneauBoutons.add(boutonBacktracking);
         panneauBoutons.add(boutonDeduction);
 
         fenetreSolution.add(panneauGrille, BorderLayout.CENTER);
         fenetreSolution.add(panneauBoutons, BorderLayout.SOUTH);
-        fenetreSolution.pack();
+        fenetreSolution.setSize(600, 600); // Définir la taille de la fenêtre
+        fenetreSolution.setLocationRelativeTo(null);
+        fenetreSolution.setVisible(true);
+    }
+
+    @Override
+    public void afficherGrilleGraphique(int[][] grille) {
+        JFrame fenetreSolution = new JFrame("Grille Résolue");
+        fenetreSolution.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panneauGrille = new JPanel(new GridLayout(taille, taille));
+
+        Color[] couleursBlocs = {
+                new Color(173, 216, 230), // Bleu clair
+                new Color(255, 228, 225), // Rose clair
+                new Color(255, 255, 224), // Jaune pâle
+                new Color(144, 238, 144), // Vert pâle
+                new Color(255, 182, 193), // Rose pâle
+                new Color(240, 248, 255), // Bleu pâle
+                new Color(255, 250, 205), // Jaune très pâle
+                new Color(221, 160, 221)  // Lavande clair
+        };
+
+        for (int ligne = 0; ligne < taille; ligne++) {
+            for (int colonne = 0; colonne < taille; colonne++) {
+                JTextField champ = new JTextField(String.valueOf(grille[ligne][colonne]));
+                champ.setHorizontalAlignment(JTextField.CENTER);
+                champ.setFont(new Font("Arial", Font.BOLD, 20));
+                champ.setEditable(false);
+
+                int blocLigne = ligne / tailleBloc;
+                int blocColonne = colonne / tailleBloc;
+                int indexBloc = blocLigne * tailleBloc + blocColonne;
+
+                champ.setBackground(couleursBlocs[indexBloc % couleursBlocs.length]);
+
+                panneauGrille.add(champ);
+            }
+        }
+
+        fenetreSolution.add(panneauGrille);
+        fenetreSolution.setSize(600, 600); // Définir la taille de la fenêtre
         fenetreSolution.setLocationRelativeTo(null);
         fenetreSolution.setVisible(true);
     }

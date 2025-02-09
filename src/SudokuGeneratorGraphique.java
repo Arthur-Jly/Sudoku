@@ -3,13 +3,24 @@ import java.awt.event.*;
 import java.util.Random;
 import javax.swing.*;
 
-public class SudokuGenerator extends SudokuModeGraphique {
+/**
+ * Classe permettant de générer une grille de Sudoku en mode graphique.
+ */
+public class SudokuGeneratorGraphique extends SudokuModeGraphique {
     private static final Random random = new Random();
 
-    public SudokuGenerator(Grille grille) {
+    /**
+     * Constructeur de la classe SudokuGeneratorGraphique.
+     *
+     * @param grille La grille de Sudoku.
+     */
+    public SudokuGeneratorGraphique(Grille grille) {
         super(grille);
     }
 
+    /**
+     * Configure l'interface graphique pour la saisie de la grille complète.
+     */
     @Override
     public void configurerInterface() {
         setTitle("Saisir Grille Complète");
@@ -102,6 +113,11 @@ public class SudokuGenerator extends SudokuModeGraphique {
         setVisible(true);
     }
 
+    /**
+     * Lance la génération de la grille incomplète en fonction du niveau de difficulté choisi.
+     *
+     * @param grilleComplete La grille complète saisie par l'utilisateur.
+     */
     private void lancerGeneration(int[][] grilleComplete) {
         String[] niveaux = {"Facile", "Moyen", "Difficile"};
         String niveau = (String) JOptionPane.showInputDialog(this, "Choisissez un niveau de difficulté", "Niveau de difficulté",
@@ -116,6 +132,11 @@ public class SudokuGenerator extends SudokuModeGraphique {
         }
     }
 
+    /**
+     * Affiche la grille incomplète avec des boutons pour choisir la méthode de résolution.
+     *
+     * @param grille La grille incomplète.
+     */
     private void afficherGrilleAvecBoutons(int[][] grille) {
         JFrame fenetreSolution = new JFrame("Grille Sudoku Incomplète");
         fenetreSolution.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -183,6 +204,11 @@ public class SudokuGenerator extends SudokuModeGraphique {
         fenetreSolution.setVisible(true);
     }
 
+    /**
+     * Affiche la grille résolue graphiquement.
+     *
+     * @param grille La grille résolue.
+     */
     @Override
     public void afficherGrilleGraphique(int[][] grille) {
         JFrame fenetreSolution = new JFrame("Grille Résolue");
@@ -223,6 +249,12 @@ public class SudokuGenerator extends SudokuModeGraphique {
         fenetreSolution.setVisible(true);
     }
 
+    /**
+     * Vérifie si la grille est valide.
+     *
+     * @param grille La grille à vérifier.
+     * @return true si la grille est valide, false sinon.
+     */
     private boolean estGrilleValide(int[][] grille) {
         // Vérifier les lignes
         for (int i = 0; i < taille; i++) {
@@ -268,11 +300,25 @@ public class SudokuGenerator extends SudokuModeGraphique {
         return true;
     }
 
+    /**
+     * Vérifie si la grille est résolvable.
+     *
+     * @param grille La grille à vérifier.
+     * @return true si la grille est résolvable, false sinon.
+     */
     private boolean estResolvable(int[][] grille) {
         int[][] copieGrille = copierGrille(grille);
         return resoudre(copieGrille, 0, 0);
     }
 
+    /**
+     * Résout la grille en utilisant l'algorithme de backtracking.
+     *
+     * @param grille La grille à résoudre.
+     * @param ligne  La ligne actuelle.
+     * @param colonne La colonne actuelle.
+     * @return true si la grille est résolue, false sinon.
+     */
     private boolean resoudre(int[][] grille, int ligne, int colonne) {
         if (ligne == taille) {
             ligne = 0;
@@ -298,6 +344,15 @@ public class SudokuGenerator extends SudokuModeGraphique {
         return false;
     }
 
+    /**
+     * Vérifie si une valeur peut être placée à une position donnée.
+     *
+     * @param grille La grille à vérifier.
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur La valeur à vérifier.
+     * @return true si la valeur peut être placée, false sinon.
+     */
     private boolean estValide(int[][] grille, int ligne, int colonne, int valeur) {
         // Vérifier la ligne
         for (int j = 0; j < taille; j++) {
@@ -321,6 +376,13 @@ public class SudokuGenerator extends SudokuModeGraphique {
         return true;
     }
 
+    /**
+     * Génère une grille incomplète à partir d'une grille complète en fonction du niveau de difficulté.
+     *
+     * @param grilleComplete La grille complète.
+     * @param niveau         Le niveau de difficulté.
+     * @return La grille incomplète.
+     */
     private int[][] genererGrilleIncomplete(int[][] grilleComplete, String niveau) {
         int[][] grille = copierGrille(grilleComplete);
         int nbCasesAEffacer = determinerNombreCasesAEffacer(niveau);
@@ -350,6 +412,12 @@ public class SudokuGenerator extends SudokuModeGraphique {
         return grille;
     }
 
+    /**
+     * Détermine le nombre de cases à effacer en fonction du niveau de difficulté.
+     *
+     * @param niveau Le niveau de difficulté.
+     * @return Le nombre de cases à effacer.
+     */
     private int determinerNombreCasesAEffacer(String niveau) {
         int nombreTotal = taille * taille;
         return switch (niveau.toLowerCase()) {
@@ -360,6 +428,12 @@ public class SudokuGenerator extends SudokuModeGraphique {
         };
     }
 
+    /**
+     * Copie une grille.
+     *
+     * @param grille La grille à copier.
+     * @return La copie de la grille.
+     */
     private int[][] copierGrille(int[][] grille) {
         int[][] copie = new int[taille][taille];
         for (int i = 0; i < taille; i++) {

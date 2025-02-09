@@ -4,6 +4,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Classe implémentant la résolution de Sudoku par déduction.
+ */
 public class Deduction {
     public final int taille;
     public final int tailleBloc;
@@ -12,6 +15,11 @@ public class Deduction {
     public Set<Integer>[][] possibilites;
     public PrintWriter logWriter;
 
+    /**
+     * Constructeur de la classe Deduction.
+     *
+     * @param grilleInitiale La grille initiale à résoudre.
+     */
     public Deduction(int[][] grilleInitiale) {
         this.taille = grilleInitiale.length;
         this.tailleBloc = (int) Math.sqrt(taille);
@@ -19,7 +27,7 @@ public class Deduction {
         this.grille = new int[taille][taille];
         this.possibilites = new HashSet[taille][taille];
         try {
-            Logger.init(); // Initialise le logger sans avoir à spécifier le fichier de log
+            Logger.init(); // Initialise le logger
         } catch (IOException e) {
             System.err.println("Erreur lors de l'initialisation du Logger : " + e.getMessage());
         }
@@ -54,12 +62,18 @@ public class Deduction {
         miseAJourInitiale();
     }
 
-    // Méthode pour loguer des messages
+    /**
+     * Logue un message.
+     *
+     * @param message Le message à loguer.
+     */
     protected void log(String message) {
         Logger.log(message);
     }
 
-    // Méthode pour loguer la grille actuelle
+    /**
+     * Logue la grille actuelle.
+     */
     private void logGrille() {
         if (logWriter != null) {
             logWriter.println("Grille actuelle :");
@@ -89,6 +103,11 @@ public class Deduction {
 
     /**
      * Vérifie si une valeur peut être placée à une position donnée.
+     *
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur La valeur à vérifier.
+     * @return true si la valeur peut être placée, false sinon.
      */
     private boolean estValide(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
@@ -109,6 +128,8 @@ public class Deduction {
 
     /**
      * Résout le Sudoku en utilisant la déduction.
+     *
+     * @return true si la grille est résolue, false sinon.
      */
     public boolean resoudreSudoku() {
         log("Début de la résolution par déduction...");
@@ -124,6 +145,8 @@ public class Deduction {
 
     /**
      * Applique la méthode de déduction jusqu'à ce qu'aucun changement ne soit fait.
+     *
+     * @return true si la grille est complète, false sinon.
      */
     private boolean resoudreParDeduction() {
         boolean modification = true;
@@ -161,6 +184,10 @@ public class Deduction {
 
     /**
      * Met à jour les possibilités après avoir placé une valeur.
+     *
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur La valeur placée.
      */
     private void miseAJourPossibilites(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
@@ -180,6 +207,10 @@ public class Deduction {
 
     /**
      * Trouve une valeur unique pour une case dans la ligne, colonne ou bloc.
+     *
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @return La valeur unique si trouvée, sinon null.
      */
     private Integer trouverValeurUnique(int ligne, int colonne) {
         for (int valeur : possibilites[ligne][colonne]) {
@@ -190,6 +221,14 @@ public class Deduction {
         return null;
     }
 
+    /**
+     * Vérifie si une valeur est unique dans la ligne, colonne ou bloc.
+     *
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur La valeur à vérifier.
+     * @return true si la valeur est unique, false sinon.
+     */
     private boolean estValeurUnique(int ligne, int colonne, int valeur) {
         for (int j = 0; j < taille; j++) {
             if (j != colonne && possibilites[ligne][j].contains(valeur)) return false;
@@ -209,6 +248,8 @@ public class Deduction {
 
     /**
      * Vérifie si la grille est complète.
+     *
+     * @return true si la grille est complète, false sinon.
      */
     private boolean estComplet() {
         for (int i = 0; i < taille; i++) {
@@ -231,10 +272,18 @@ public class Deduction {
         }
     }
 
+    /**
+     * Retourne la grille résolue.
+     *
+     * @return La grille résolue.
+     */
     public int[][] getGrilleResolue() {
         return grille;
     }
 
+    /**
+     * Ferme le logger à la fin.
+     */
     public void closeLogger() {
         try {
             Logger.close();

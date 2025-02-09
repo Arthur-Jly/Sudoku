@@ -1,5 +1,7 @@
 # Grille de Sudoku à résoudre
 # Utilisez des "0" pour les cases vides.
+#Ne pas oubliez les espaces entre les nombres
+#Les tailles valides sont 4, 9, 16, 25
 
 5 3 0 0 7 0 0 0 0
 6 0 0 1 9 5 0 0 0
@@ -11,9 +13,13 @@
 0 0 0 4 1 9 0 0 5
 0 0 0 0 8 0 0 7 9
 
+
+
 # Méthode de résolution choisie
 # Choisissez l'une des méthodes suivantes :
 # backtracking, deduction, combine
 # Exemple : backtracking
 
+
 backtracking
+

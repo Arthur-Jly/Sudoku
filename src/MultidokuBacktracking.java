@@ -1,13 +1,27 @@
+/**
+ * Classe implémentant l'algorithme de backtracking pour résoudre les grilles de Multidoku.
+ */
 public class MultidokuBacktracking extends Backtracking {
     private final int[][] blocs; // Tableau des blocs personnalisés
 
+    /**
+     * Constructeur de la classe MultidokuBacktracking.
+     *
+     * @param grilleInitiale La grille initiale à résoudre.
+     * @param blocs          Les blocs personnalisés.
+     */
     public MultidokuBacktracking(int[][] grilleInitiale, int[][] blocs) {
         super(grilleInitiale); // Appel du constructeur de la classe parente
         this.blocs = blocs; // Initialisation des blocs personnalisés
     }
 
     /**
-     * Vérifie si une valeur peut être placée à une position donnée en tenant compte des blocs personnalisés
+     * Vérifie si une valeur peut être placée à une position donnée en tenant compte des blocs personnalisés.
+     *
+     * @param ligne   La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur  La valeur à vérifier.
+     * @return true si la valeur peut être placée, false sinon.
      */
     @Override
     public boolean estValide(int ligne, int colonne, int valeur) {
@@ -39,7 +53,9 @@ public class MultidokuBacktracking extends Backtracking {
     }
 
     /**
-     * Vérifie si la grille initiale est valide en tenant compte des blocs personnalisés
+     * Vérifie si la grille initiale est valide en tenant compte des blocs personnalisés.
+     *
+     * @return true si la grille initiale est valide, false sinon.
      */
     @Override
     public boolean verifierGrilleInitiale() {
@@ -60,7 +76,9 @@ public class MultidokuBacktracking extends Backtracking {
     }
 
     /**
-     * Retourne la grille résolue
+     * Retourne la grille résolue.
+     *
+     * @return La grille résolue.
      */
     @Override
     public int[][] getGrilleResolue() {

@@ -2,12 +2,20 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * Classe représentant le mode graphique pour le Sudoku.
+ */
 public class SudokuModeGraphique extends JFrame {
     public Grille grille;
     public JTextField[][] champsTexte;
     public final int taille;
     public final int tailleBloc;
 
+    /**
+     * Constructeur de la classe SudokuModeGraphique.
+     *
+     * @param grille La grille de Sudoku.
+     */
     public SudokuModeGraphique(Grille grille) {
         this.grille = grille;
         this.taille = grille.getGrilleValeurs().length;
@@ -16,6 +24,9 @@ public class SudokuModeGraphique extends JFrame {
         configurerInterface();
     }
 
+    /**
+     * Configure l'interface graphique.
+     */
     public void configurerInterface() {
         setTitle("Grille Sudoku");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -85,10 +96,17 @@ public class SudokuModeGraphique extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Valide l'entrée de l'utilisateur dans un champ de texte.
+     *
+     * @param champ   Le champ de texte.
+     * @param ligne   La ligne de la case.
+     * @param colonne La colonne de la case.
+     */
     public void validerEntree(JTextField champ, int ligne, int colonne) {
         String entree = champ.getText().trim();
     
-         if (entree.isEmpty()) {
+        if (entree.isEmpty()) {
             return;
         }
     
@@ -111,6 +129,11 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Lance la résolution de la grille en utilisant l'algorithme de backtracking.
+     *
+     * @param backtracking L'instance de l'algorithme de backtracking.
+     */
     public void lancerResolution(Backtracking backtracking) {
         recupererValeursInterface();
         if (backtracking.resoudreSudoku()) {
@@ -120,6 +143,11 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Lance la résolution de la grille en utilisant l'algorithme de déduction.
+     *
+     * @param deduction L'instance de l'algorithme de déduction.
+     */
     public void lancerResolution(Deduction deduction) {
         recupererValeursInterface();
         if (deduction.resoudreSudoku()) {
@@ -129,6 +157,9 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Lance la résolution de la grille en utilisant une combinaison de déduction et de backtracking.
+     */
     public void lancerResolutionCombine() {
         recupererValeursInterface();
         ResolveurCombine solveur = new ResolveurCombine(grille.getGrilleValeurs());
@@ -140,6 +171,9 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Récupère les valeurs de la grille depuis l'interface utilisateur.
+     */
     public void recupererValeursInterface() {
         for (int ligne = 0; ligne < taille; ligne++) {
             for (int colonne = 0; colonne < taille; colonne++) {
@@ -156,6 +190,11 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Affiche la grille résolue graphiquement.
+     *
+     * @param grilleResolue La grille résolue.
+     */
     public void afficherGrilleGraphique(int[][] grilleResolue) {
         for (int ligne = 0; ligne < taille; ligne++) {
             for (int colonne = 0; colonne < taille; colonne++) {
@@ -165,6 +204,9 @@ public class SudokuModeGraphique extends JFrame {
         }
     }
 
+    /**
+     * Initialise et affiche la grille.
+     */
     public void initialiserGrille() {
         setVisible(true);
     }

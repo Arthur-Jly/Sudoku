@@ -2,6 +2,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Classe implémentant l'algorithme de backtracking pour résoudre les grilles de Sudoku.
+ */
 public class Backtracking {
     public final int taille;
     public final int tailleBloc;
@@ -9,13 +12,18 @@ public class Backtracking {
     public final int[][] grilleOriginale;
     private PrintWriter logWriter;
 
+    /**
+     * Constructeur de la classe Backtracking.
+     *
+     * @param grilleInitiale La grille initiale à résoudre.
+     */
     public Backtracking(int[][] grilleInitiale) {
         this.taille = grilleInitiale.length;
         this.tailleBloc = (int) Math.sqrt(taille);
         this.grilleOriginale = new int[taille][taille];
         this.grille = new int[taille][taille];
         try {
-            Logger.init(); // Initialise le logger sans avoir à spécifier le fichier de log
+            Logger.init(); // Initialise le logger
         } catch (IOException e) {
             System.err.println("Erreur lors de l'initialisation du Logger : " + e.getMessage());
         }
@@ -42,12 +50,18 @@ public class Backtracking {
         }
     }
 
-    // Méthode pour loguer des messages
+    /**
+     * Logue un message.
+     *
+     * @param message Le message à loguer.
+     */
     protected void log(String message) {
         Logger.log(message);
     }
 
-    // Méthode pour loguer la grille actuelle
+    /**
+     * Logue la grille actuelle.
+     */
     private void logGrille() {
         if (logWriter != null) {
             logWriter.println("Grille actuelle :");
@@ -62,14 +76,9 @@ public class Backtracking {
         }
     }
 
-    // Exemple d'utilisation de log dans une méthode de Backtracking
-    public void resolver() {
-        log("Début de la résolution...");
-        // Logique de résolution ici
-        log("Fin de la résolution.");
-    }
-
-    // Fermer le logger à la fin
+    /**
+     * Ferme le logger à la fin.
+     */
     public void closeLogger() {
         Logger.close();
         if (logWriter != null) {
@@ -78,7 +87,12 @@ public class Backtracking {
     }
 
     /**
-     * Vérifie si une valeur peut être placée à une position donnée
+     * Vérifie si une valeur peut être placée à une position donnée.
+     *
+     * @param ligne  La ligne de la case.
+     * @param colonne La colonne de la case.
+     * @param valeur La valeur à vérifier.
+     * @return true si la valeur peut être placée, false sinon.
      */
     public boolean estValide(int ligne, int colonne, int valeur) {
         // Vérification de la ligne
@@ -111,7 +125,10 @@ public class Backtracking {
     }
 
     /**
-     * Trouve la prochaine case vide
+     * Trouve la prochaine case vide.
+     *
+     * @param position Un tableau de deux entiers pour stocker la position de la case vide.
+     * @return true si une case vide est trouvée, false sinon.
      */
     private boolean trouverCaseVide(int[] position) {
         for (int i = 0; i < taille; i++) {
@@ -127,7 +144,9 @@ public class Backtracking {
     }
 
     /**
-     * Vérifie si la grille initiale est valide
+     * Vérifie si la grille initiale est valide.
+     *
+     * @return true si la grille initiale est valide, false sinon.
      */
     public boolean verifierGrilleInitiale() {
         for (int i = 0; i < taille; i++) {
@@ -147,9 +166,11 @@ public class Backtracking {
     }
 
     /**
-     * Algorithme de backtracking
+     * Algorithme de backtracking pour résoudre la grille.
+     *
+     * @return true si la grille est résolue, false sinon.
      */
-    public  boolean resoudre() {
+    public boolean resoudre() {
         int[] position = new int[2];
 
         if (!trouverCaseVide(position)) {
@@ -176,6 +197,11 @@ public class Backtracking {
         return false;
     }
 
+    /**
+     * Résout la grille de Sudoku.
+     *
+     * @return true si la grille est résolue, false sinon.
+     */
     public boolean resoudreSudoku() {
         if (!verifierGrilleInitiale()) {
             System.out.println("La grille initiale n'est pas valide !");
@@ -199,7 +225,7 @@ public class Backtracking {
     }
 
     /**
-     * Affiche la solution trouvée
+     * Affiche la solution trouvée.
      */
     private void afficherSolution() {
         System.out.println("\nSolution trouvée :");
@@ -222,7 +248,9 @@ public class Backtracking {
     }
 
     /**
-     * Retourne la grille résolue
+     * Retourne la grille résolue.
+     *
+     * @return La grille résolue.
      */
     public int[][] getGrilleResolue() {
         return grille;

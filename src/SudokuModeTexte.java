@@ -2,13 +2,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * Classe représentant le mode texte pour le Sudoku.
+ */
 public class SudokuModeTexte {
     public Grille grille;
 
+    /**
+     * Constructeur de la classe SudokuModeTexte.
+     *
+     * @param grille La grille de Sudoku.
+     */
     public SudokuModeTexte(Grille grille) {
         this.grille = grille;
     }
 
+    /**
+     * Démarre le jeu en mode texte.
+     */
     public void demarrerJeu() {
         Scanner scanner = new Scanner(System.in);
 
@@ -103,6 +114,12 @@ public class SudokuModeTexte {
         scanner.close();
     }
 
+    /**
+     * Affiche la grille de Sudoku.
+     *
+     * @param grille La grille à afficher.
+     * @param taille La taille de la grille.
+     */
     private void afficherGrille(int[][] grille, int taille) {
         int tailleBloc = (int) Math.sqrt(taille);
         System.out.println("-".repeat(taille * 2 + tailleBloc));
@@ -123,7 +140,11 @@ public class SudokuModeTexte {
         System.out.println("-".repeat(taille * 2 + tailleBloc));
     }
 
-    // Nouvelle méthode pour extraire la logique de saisie manuelle
+    /**
+     * Gère la saisie manuelle de la grille par l'utilisateur.
+     *
+     * @param scanner Le scanner pour lire les entrées de l'utilisateur.
+     */
     private void saisieManuelle(Scanner scanner) {
         int[][] grilleValeurs = grille.getGrilleValeurs();
         int taille = grilleValeurs.length;
@@ -135,7 +156,7 @@ public class SudokuModeTexte {
             boolean entreeValide = false;
 
             while (!entreeValide) {
-                System.out.println("Entrez la ligne puis entrer, la colonne (0 à " + (taille - 1) + ") puis entrer,et la valeur à insérer (1 à " + taille + "):");
+                System.out.println("Entrez la ligne, la colonne (0 à " + (taille - 1) + ") et la valeur à insérer (1 à " + taille + "):");
 
                 if (!scanner.hasNextInt()) {
                     System.out.println("Entrée invalide. Veuillez entrer des nombres.");
@@ -236,6 +257,12 @@ public class SudokuModeTexte {
         }
     }
 
+    /**
+     * Résout la grille de Sudoku en utilisant la méthode spécifiée.
+     *
+     * @param scanner            Le scanner pour lire les entrées de l'utilisateur.
+     * @param methodeResolution  La méthode de résolution à utiliser.
+     */
     private void resoudreGrille(Scanner scanner, String methodeResolution) {
         int[][] grilleValeurs = grille.getGrilleValeurs();
         int taille = grilleValeurs.length;

@@ -203,11 +203,11 @@ public class Backtracking {
      */
     private void afficherSolution() {
         System.out.println("\nSolution trouvée :");
-        System.out.println("-".repeat(taille * 2 + tailleBloc));
+        System.out.println(multiplierCaractere('-', taille * 2 + tailleBloc));
 
         for (int i = 0; i < taille; i++) {
             if (i > 0 && i % tailleBloc == 0) {
-                System.out.println("-".repeat(taille * 2 + tailleBloc));
+                System.out.println(multiplierCaractere('-', taille * 2 + tailleBloc));
             }
 
             for (int j = 0; j < taille; j++) {
@@ -218,7 +218,7 @@ public class Backtracking {
             }
             System.out.println();
         }
-        System.out.println("-".repeat(taille * 2 + tailleBloc));
+        System.out.println(multiplierCaractere('-', taille * 2 + tailleBloc));
     }
 
     /**
@@ -226,5 +226,13 @@ public class Backtracking {
      */
     public int[][] getGrilleResolue() {
         return grille;
+    }
+
+    private String multiplierCaractere(char c, int n) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }

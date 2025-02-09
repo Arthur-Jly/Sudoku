@@ -173,6 +173,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         setSize(1200, 800);
     }
 
+
     private int compterCasesBloc(int bloc) {
         int count = 0;
         for (int[] ligne : blocs) {
@@ -185,7 +186,9 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return count;
     }
 
-    private boolean tousBlocksDefinis() {
+
+    public boolean tousBlocksDefinis() {
+
         for (int[] ligne : blocs) {
             for (int bloc : ligne) {
                 if (bloc == 0) {
@@ -196,7 +199,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-    private boolean verifierMultidoku() {
+    public boolean verifierMultidoku() {
         for (int i = 0; i < grille.getTaille(); i++) {
             if (!verifierLigne(i) || !verifierColonne(i)) {
                 JOptionPane.showMessageDialog(this, "Erreur : Les nombres ne respectent pas les règles du Sudoku", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -214,7 +217,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-    private boolean verifierLigne(int ligne) {
+    public boolean verifierLigne(int ligne) {
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int col = 0; col < grille.getTaille(); col++) {
             String valeur = champsTexte[ligne][col].getText().trim();
@@ -229,7 +232,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-    private boolean verifierColonne(int colonne) {
+    public boolean verifierColonne(int colonne) {
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int lig = 0; lig < grille.getTaille(); lig++) {
             String valeur = champsTexte[lig][colonne].getText().trim();
@@ -244,7 +247,7 @@ public class MultidokuModeGraphique extends SudokuModeGraphique {
         return true;
     }
 
-    private boolean verifierBloc(int numBloc) {
+    public boolean verifierBloc(int numBloc) {
         boolean[] presents = new boolean[grille.getTaille() + 1];
         for (int ligne = 0; ligne < grille.getTaille(); ligne++) {
             for (int colonne = 0; colonne < grille.getTaille(); colonne++) {
